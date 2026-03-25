@@ -27,10 +27,10 @@ body{
   background:var(--bg); /* uniforme */
 }
 h1,h2{ margin:0 0 10px 0; letter-spacing:-0.02em; line-height:1.15; }
-h1{ font-size:24px; font-weight:800; }
-h2{ font-size:20px; font-weight:800; }
+h1{ font-size:28px; font-weight:500; }
+h2{ font-size:24px; font-weight:500; }
 .muted{ color:var(--muted); font-size:13px; margin:6px 0 14px 0; }
-a{ color:var(--accent); text-decoration:none; font-weight:700; }
+a{ color:var(--accent); text-decoration:none; font-weight:500; }
 a:hover{ text-decoration:underline; }
 .container{ max-width:1100px; margin:0 auto; }
 .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
@@ -442,10 +442,41 @@ function loadFixedPage(which){
   const frame = document.getElementById("frame"); // <-- change id if needed
   if(which === "welcome"){
     frame.srcdoc = wrapDoc(`
-      <h2>Bienvenue</h2><p>Choisissez une section dans le menu à gauche.</p>`);
+      <h2>Bienvenue</h2>
+	<p>
+	Cet espace vous donne accès à vos analyses, rapports et outils personnalisés. 
+	Utilisez le menu à gauche pour naviguer entre les différentes sections.
+	</p>
+	<p>
+	La rubrique <strong>Articles</strong> regroupe les études réalisées ou partagées avec vous.  
+	La section <strong>Documentation</strong> explique en détail comment utiliser nos outils, ce que signifie notre approche "Client Side" notamment en terme de sécurité et confidentialité de la donnée.  
+	Dans <strong>Solutions</strong>, vous trouverez les outils développés pour vos besoins.  
+	Enfin, la page <strong>Contact</strong> vous permet d’échanger avec nous autour de vos projets.
+	</p>`);
   } else {
     frame.srcdoc = wrapDoc(`
-      <h2>Contact</h2><p>Email: <a href="mailto:demo@local">demo@local</a></p>`);
+      <h2>Contact</h2>
+
+<p>
+Pour toute question, demande d’information ou échange autour de vos projets, vous pouvez nous joindre directement via les coordonnées ci‑dessous.
+</p>
+
+<p>
+Email : <a href="mailto:demo@local">demo@local</a><br>
+Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
+</p>
+
+<p>Nous sommes situés au 14 rue Lafayette, Paris :</p>
+
+<iframe
+  width="100%"
+  height="300"
+  style="border:0; border-radius:8px;"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.548812977981!2d2.341953!3d48.874051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e15c3e2d4d1%3A0x8e3e6b0e0ef5c975!2s14%20Rue%20La%20Fayette%2C%2075009%20Paris!5e0!3m2!1sfr!2sfr!4v0000000000000">
+</iframe>`);
   }
 }
 
