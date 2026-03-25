@@ -1,12 +1,17 @@
 // HAL front (fixed API base + fixed site_id)
-// - Login popup (prompt)
-// - Audience dropdown triggers set-audience + menu reload
-// - Iframe loads /{site}/{section}/{page}?t=TOKEN
+// - Login popup panel: sections only (from backend menu keys)// - Login popup (prompt)
+// - Clicking a section shows a "Section hub" with cards (srcdoc)
+// - Clicking a card opens the real page in iframe: /{site}/{section}/{page}?t=TOKEN
 
 const API_BASE = "https://maliwann.pythonanywhere.com";
 const SITE_ID  = "HAL";
 
+// token is a simple opaque token stored locally for convenience
 let token = localStorage.getItem("hal_token") || null;
+
+// Menu cache structure: { sectionName: [ {id, section, title, url}, ... ] }
+let MENU_CACHE = {};
+let CURRENT_SECTION = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -29,7 +34,7 @@ function hideSpinner() {
 }
 
 function setStatus(msg, isError=false) {
-  $("status").innerHTML = isError ? `<span class="danger">${msg}</span>` : msg;
+  $("status").innerHTML = isError ? `<span class="danger">${escapeHtml(msg)}</span>` : escapeHtml(msg);
 }
 
 function setAuthButton() {
@@ -80,9 +85,8 @@ async function loginPopup() {
   setAuthButton();
   setStatus("✅ Logged in");
 
-  // load memberships and menu
   await loadMemberships();
-  await onAudienceChange(true); // force set-audience + menu
+  await onAudienceChange(true); // set-audience + menu
 }
 
 async function logout() {
@@ -103,6 +107,8 @@ async function logout() {
   $("menu").innerHTML = "";
   $("frame").src = "about:blank";
   $("currentUrl").textContent = "-";
+  MENU_CACHE = {};
+  CURRENT_SECTION = null;
   setStatus("👋 Logged out");
 }
 
@@ -150,11 +156,13 @@ async function loadMenu() {
     headers: { ...authHeaders() }
   });
   if (!d.ok) throw new Error(d.error || "menu_failed");
-  renderMenu(d.menu || {});
+
+  MENU_CACHE = d.menu || {};
+  renderSectionsOnly(MENU_CACHE);
   setStatus("✅ Menu loaded");
 }
 
-// if user changes dropdown => set audience + load menu + (optionally reload current page)
+// when dropdown changes => set-audience + reload menu + refresh current view
 async function onAudienceChange(force=false) {
   if (!token) return;
 
@@ -166,76 +174,138 @@ async function onAudienceChange(force=false) {
     await setAudience(audience);
     await loadMenu();
 
-    // If a page is already open (hash route), reload it to reflect audience-based variant
-    const route = parseHash();
-    if (route) openPage(route.section, route.pageId);
-    else {
-      // optional: open a default page if you want
-      // openPage("docs", "home");
+    // refresh current view
+    const r = parseHash();
+    if (r) {
+      if (r.kind === "section") openSectionHub(r.section);
+      if (r.kind === "page") openPage(r.section, r.pageId);
+    } else {
+      // default view: show first section hub
+      const secs = Object.keys(MENU_CACHE || {});
+      if (secs.length) navigateToSection(secs[0]);
     }
 
-    if (!force) setStatus(`✅ View active: ${audience}`);
+    if (force) setStatus(`✅ View active: ${audience}`);
     else setStatus(`✅ View active: ${audience}`);
   } catch (e) {
     setStatus("Audience/menu error: " + e.message, true);
   }
 }
 
-// ---------- Menu rendering ----------
-function renderMenu(menu) {
+// ---------- Left panel: sections only ----------
+function renderSectionsOnly(menu) {
   const menuDiv = $("menu");
   menuDiv.innerHTML = "";
 
-  const sections = Object.keys(menu);
+  const sections = Object.keys(menu || {});
   if (!sections.length) {
     menuDiv.innerHTML = `<div class="muted">No pages for this view.</div>`;
     return;
   }
 
   sections.forEach(section => {
-    const sec = document.createElement("div");
-    sec.className = "section";
-    sec.innerHTML = `<div class="section-title">${section}</div>`;
-    menuDiv.appendChild(sec);
+    const count = (menu[section] || []).length;
 
-    (menu[section] || []).forEach(p => {
-      const a = document.createElement("a");
-      a.className = "menu-item";
-      a.href = "#/" + [p.section, p.id].map(encodeURIComponent).join("/");
-      a.textContent = p.title || p.id;
-      a.onclick = (ev) => {
-        ev.preventDefault();
-        navigateTo(p.section, p.id);
-      };
-      sec.appendChild(a);
-    });
+    const a = document.createElement("a");
+    a.className = "menu-item";
+    a.href = "#/section/" + encodeURIComponent(section);
+
+    const left = document.createElement("span");
+    left.textContent = section;
+
+    const right = document.createElement("span");
+    right.className = "count";
+    right.textContent = String(count);
+
+    a.appendChild(left);
+    a.appendChild(right);
+
+    a.onclick = (ev) => {
+      ev.preventDefault();
+      navigateToSection(section);
+    };
+
+    menuDiv.appendChild(a);
   });
 }
 
-// ---------- Routing (#/section/page) ----------
-function navigateTo(section, pageId) {
-  const hash = "#/" + [section, pageId].map(encodeURIComponent).join("/");
-  location.hash = hash;
-  openPage(section, pageId);
+// ---------- Section hub (cards) ----------
+function navigateToSection(section) {
+  location.hash = "#/section/" + encodeURIComponent(section);
+  openSectionHub(section);
 }
 
-function parseHash() {
-  const h = location.hash || "";
-  if (!h.startsWith("#/")) return null;
-  const parts = h.slice(2).split("/").map(decodeURIComponent).filter(Boolean);
-  if (parts.length < 2) return null;
-  return { section: parts[0], pageId: parts[1] };
+function openSectionHub(section) {
+  if (!token) { setStatus("Please login first.", true); return; }
+
+  CURRENT_SECTION = section;
+
+  const pages = (MENU_CACHE && MENU_CACHE[section]) ? MENU_CACHE[section] : [];
+  $("currentUrl").textContent = `/${SITE_ID}/${section}`;
+
+  const cardsHtml = (pages || []).map(p => {
+    const title = escapeHtml(p.title || p.id);
+    const pid = encodeURIComponent(p.id);
+    const sec = encodeURIComponent(section);
+    const path = `/${SITE_ID}/${section}/${p.id}`;
+    return `
+      <div class="card" onclick="parent.location.hash='#/${sec}/${pid}'" role="button" tabindex="0">
+        <div class="card-title">${title}</div>
+        <div class="card-sub">${escapeHtml(path)}</div>
+      </div>
+    `;
+  }).join("");
+
+  const html = `
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <style>
+        body{font-family:Arial,system-ui;margin:0;padding:18px;color:#111827;background:#fff}
+        h1{font-size:26px;margin:0 0 10px 0}
+        .muted{color:#6b7280;font-size:13px;margin-bottom:14px}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+        .card{
+          border:1px solid #e5e7eb;border-radius:12px;padding:12px;
+          cursor:pointer;background:#fff;
+          transition: transform .06s ease, box-shadow .06s ease;
+        }
+        .card:hover{transform: translateY(-1px); box-shadow: 0 4px 18px rgba(0,0,0,0.06)}
+        .card-title{font-weight:700;margin-bottom:6px}
+        .card-sub{color:#6b7280;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      </style>
+    </head>
+    <body>
+      <h1>${escapeHtml(section)}</h1>
+      <div class="muted">Select a card to open the page.</div>
+      <div class="grid">
+        ${cardsHtml || `<div class="muted">No pages in this section.</div>`}
+      </div>
+    </body>
+    </html>
+  `;
+
+  showSpinner("Loading section…");
+  const frame = $("frame");
+  frame.src = "about:blank";   // reset
+  frame.srcdoc = html;        // local render
 }
 
-// ---------- Iframe open ----------
+// ---------- Real page open (iframe) ----------
 function openPage(section, pageId) {
   if (!token) { setStatus("Please login first.", true); return; }
+
   const urlPath = `/${encodeURIComponent(SITE_ID)}/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}`;
   const src = API_BASE + urlPath + "?t=" + encodeURIComponent(token);
 
   $("currentUrl").textContent = urlPath;
+
   showSpinner("Loading page…");
-  $("frame").src = src;
+  const frame = $("frame");
+  frame.srcdoc = "";          // ensure srcdoc isn't “sticky”
+  frame.src = src;
 }
 
 // Bind spinner to iframe events
@@ -248,6 +318,33 @@ function openPage(section, pageId) {
   });
 })();
 
+// ---------- Routing ----------
+function parseHash() {
+  const h = location.hash || "";
+  if (!h.startsWith("#/")) return null;
+  const parts = h.slice(2).split("/").map(decodeURIComponent).filter(Boolean);
+
+  // #/section/<sectionName>
+  if (parts[0] === "section" && parts.length >= 2) {
+    return { kind: "section", section: parts.slice(1).join("/") }; // allow section names with slashes if ever
+  }
+
+  // #/<section>/<pageId>
+  if (parts.length >= 2) {
+    return { kind: "page", section: parts[0], pageId: parts.slice(1).join("/") };
+  }
+
+  return null;
+}
+
+window.addEventListener("hashchange", () => {
+  const r = parseHash();
+  if (!r) return;
+
+  if (r.kind === "section") openSectionHub(r.section);
+  if (r.kind === "page") openPage(r.section, r.pageId);
+});
+
 // ---------- UI bindings ----------
 $("btnAuth").onclick = async () => {
   if (token) await logout();
@@ -258,14 +355,8 @@ $("btnAuth").onclick = async () => {
 };
 
 $("audience").addEventListener("change", () => {
-  // whenever dropdown changes => triggers Activer la vue + Charger menu
+  // whenever dropdown changes => triggers set-audience + reload menu
   onAudienceChange(false);
-});
-
-// Hash change opens pages
-window.addEventListener("hashchange", () => {
-  const r = parseHash();
-  if (r) openPage(r.section, r.pageId);
 });
 
 // ---------- Boot ----------
@@ -280,9 +371,14 @@ window.addEventListener("hashchange", () => {
   try {
     setStatus("🔁 Restoring session…");
     await loadMemberships();
-    await onAudienceChange(true);   // set-audience + menu
+    await onAudienceChange(true);
+
+    // If URL hash already points somewhere, open it
     const r = parseHash();
-    if (r) openPage(r.section, r.pageId);
+    if (r) {
+      if (r.kind === "section") openSectionHub(r.section);
+      if (r.kind === "page") openPage(r.section, r.pageId);
+    }
   } catch (e) {
     // token may be expired/revoked
     setStatus("Session invalid. Please login again.", true);
@@ -291,3 +387,11 @@ window.addEventListener("hashchange", () => {
     setAuthButton();
   }
 })();
+
+// ---------- Helpers ----------
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+// - Audience dropdown triggers set-audience + menu reload

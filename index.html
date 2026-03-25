@@ -11,6 +11,7 @@
       --link:#2563eb;
       --bg:#ffffff;
       --soft:#f9fafb;
+      --text:#111827;
     }
     body{
       font-family: Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -18,7 +19,7 @@
       height:100vh;
       display:flex;
       background:var(--bg);
-      color:#111827;
+      color:var(--text);
     }
     aside{
       width:320px;
@@ -28,6 +29,7 @@
       display:flex;
       flex-direction:column;
       gap:12px;
+      overflow:hidden;
     }
     main{
       flex:1;
@@ -68,30 +70,33 @@
       background:white;
       box-sizing:border-box;
     }
+
+    /* left menu */
     #menu{
       overflow:auto;
       padding-right:4px;
-    }
-    .section{
-      margin-top:8px;
-    }
-    .section-title{
-      font-weight:700;
-      font-size:12px;
-      color:#374151;
-      margin:14px 0 6px 0;
-      text-transform:lowercase; /* matches your screenshot vibe ("docs") */
+      border-top:1px solid var(--border);
+      padding-top:10px;
     }
     a.menu-item{
-      display:block;
-      padding:6px 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:7px 0;
       color:var(--link);
       text-decoration:none;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      border-bottom:1px solid rgba(229,231,235,0.45);
     }
     a.menu-item:hover{ text-decoration:underline; }
+    .count{
+      color:var(--muted);
+      font-size:12px;
+      flex:0 0 auto;
+    }
     .pill{
       display:inline-block;
       padding:2px 8px;
@@ -99,6 +104,10 @@
       border-radius:999px;
       font-size:12px;
       color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:100%;
     }
 
     /* iframe wrapper + spinner */
@@ -127,7 +136,7 @@
       border-radius:10px;
     }
 
-    /* small status */
+    /* status */
     #status{ color:var(--muted); font-size:12px; }
     .danger{ color:#b91c1c; }
   </style>
@@ -152,9 +161,7 @@
 
   <main>
     <div class="topbar">
-      <div>
-        <span class="pill" id="currentUrl">-</span>
-      </div>
+      <span class="pill" id="currentUrl">-</span>
       <button class="btn" id="btnAuth">Login</button>
     </div>
 
@@ -169,6 +176,6 @@
     </div>
   </main>
 
- <script src="app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
