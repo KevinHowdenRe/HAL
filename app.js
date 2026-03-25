@@ -105,7 +105,11 @@ async function logout() {
   setAuthButton();
   $("audience").innerHTML = "";
   $("menu").innerHTML = "";
-  $("frame").src = "about:blank";
+  
+  const f = $("frame");
+  f.srcdoc = "";
+  f.src = "about:blank";
+
   $("currentUrl").textContent = "-";
   MENU_CACHE = {};
   CURRENT_SECTION = null;
@@ -413,9 +417,8 @@ function loadFixedPage(which){
 
 // ---------- Boot ----------
 (async function boot(){
-  loadFixedPage();
   setAuthButton();
-
+  renderFixedTopBottom();
   if (!token) {
     setStatus("🔐 Connexion requise.");
     return;
