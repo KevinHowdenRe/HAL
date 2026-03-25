@@ -419,6 +419,7 @@ function loadFixedPage(which){
 (async function boot(){
   setAuthButton();
   renderFixedTopBottom();
+  loadFixedPage("welcome");
   if (!token) {
     setStatus("🔐 Connexion requise.");
     return;

@@ -204,16 +204,10 @@
 	#fixedTop{ margin-bottom:8px; }
 	#fixedBottom{ margin-top:8px; }
 
+	/* enlever les séparateurs (sinon ça double avec ceux des .menu-item) */
 	#fixedTop, #fixedBottom{
-	  border-bottom:1px solid rgba(229,231,235,0.25);
-	  padding-bottom:6px;
-	}
-
-	#fixedBottom{
-	  border-bottom:none;
-	  border-top:1px solid rgba(229,231,235,0.25);
-	  padding-top:6px;
-	  padding-bottom:0;
+	  border:0 !important;
+	  padding:0;
 	}
 	
     /* status */
