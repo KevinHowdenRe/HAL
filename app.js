@@ -303,9 +303,17 @@ function openPage(section, pageId) {
   $("currentUrl").textContent = urlPath;
 
   showSpinner("Loading page…");
+
   const frame = $("frame");
-  frame.srcdoc = "";          // ensure srcdoc isn't “sticky”
-  frame.src = src;
+
+  // ✅ IMPORTANT: srcdoc can be sticky -> remove it
+  frame.removeAttribute("srcdoc");
+
+  // Reset then navigate (helps browsers apply the navigation)
+  frame.src = "about:blank";
+  setTimeout(() => {
+    frame.src = src;
+  }, 0);
 }
 
 // Bind spinner to iframe events
