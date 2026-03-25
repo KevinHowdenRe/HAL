@@ -245,8 +245,10 @@ async function onAudienceChange(force=false) {
       if (r.kind === "page") openPage(r.section, r.pageId);
     } else {
       // default view: show first section hub
-      const secs = Object.keys(MENU_CACHE || {});
-      if (secs.length) navigateToSection(secs[0]);
+      //const secs = Object.keys(MENU_CACHE || {});
+      //if (secs.length) navigateToSection(secs[0]);
+	  loadFixedPage("welcome");
+	  
     }
 
     if (force) setStatus(`🛠️ Conçu pour: ${label}`);
