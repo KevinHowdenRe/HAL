@@ -166,8 +166,9 @@ async function loadMenu() {
 async function onAudienceChange(force=false) {
   if (!token) return;
   
-  const audience = $("audience").value;
-  const label = $("#audience option:selected").text();
+  const sel = $("audience");
+  const audience = sel.value;
+  const label = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : audience;
   if (!audience) return;
 	
   try {
@@ -187,7 +188,7 @@ async function onAudienceChange(force=false) {
     }
 
     if (force) setStatus(`🛠️ Designed for: ${label}`);
-    else setStatus(`🛠️ Designed for: ${label}`);
+    else setStatus(`🛠️ Designed for : ${label}`);
   } catch (e) {
     setStatus("Audience/menu error: " + e.message, true);
   }
