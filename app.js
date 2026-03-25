@@ -6,6 +6,64 @@
 const API_BASE = "https://maliwann.pythonanywhere.com";
 const SITE_ID  = "HAL";
 
+
+
+const COMMON_CSS = `
+:root{
+  --accent:#218D80;
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:rgba(15,23,42,.12);
+  --card:#ffffff;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  padding:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:var(--text);
+  background:var(--bg); /* uniforme */
+}
+h1,h2{ margin:0 0 10px 0; letter-spacing:-0.02em; line-height:1.15; }
+h1{ font-size:24px; font-weight:800; }
+h2{ font-size:20px; font-weight:800; }
+.muted{ color:var(--muted); font-size:13px; margin:6px 0 14px 0; }
+a{ color:var(--accent); text-decoration:none; font-weight:700; }
+a:hover{ text-decoration:underline; }
+.container{ max-width:1100px; margin:0 auto; }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  cursor:pointer;
+  transition: transform .08s ease, box-shadow .08s ease, border-color .08s ease;
+  box-shadow: 0 1px 0 rgba(15,23,42,.04);
+}
+.card:hover{
+  transform: translateY(-1px);
+  border-color: rgba(33,141,128,.35);
+  box-shadow: 0 10px 24px rgba(15,23,42,.08);
+}
+.card-title{ font-weight:800; margin-bottom:6px; font-size:14px; letter-spacing:-0.01em; }
+.card-sub{ color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+`;
+
+
+function wrapDoc(bodyHtml, title=""){
+  return `<!doctype html><html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>${escapeHtml(title)}</title>
+    <style>${COMMON_CSS}</style>
+  </head><body>${bodyHtml}</body></html>`;
+}
+
+
+
 // token is a simple opaque token stored locally for convenience
 let token = localStorage.getItem("hal_token") || null;
 
@@ -262,36 +320,14 @@ function openSectionHub(section) {
     `;
   }).join("");
 
-  const html = `
-    <!doctype html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <style>
-        body{font-family:Arial,system-ui;margin:0;padding:18px;color:#111827;background:#fff}
-        h1{font-size:26px;margin:0 0 10px 0}
-        .muted{color:#6b7280;font-size:13px;margin-bottom:14px}
-        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-        .card{
-          border:1px solid #e5e7eb;border-radius:12px;padding:12px;
-          cursor:pointer;background:#fff;
-          transition: transform .06s ease, box-shadow .06s ease;
-        }
-        .card:hover{transform: translateY(-1px); box-shadow: 0 4px 18px rgba(0,0,0,0.06)}
-        .card-title{font-weight:700;margin-bottom:6px}
-        .card-sub{color:#6b7280;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      </style>
-    </head>
-    <body>
+  const html = wrapDoc(`
+    
       <h1>${escapeHtml(section)}</h1>
       <div class="muted">Select a card to open the page.</div>
       <div class="grid">
         ${cardsHtml || `<div class="muted">No pages in this section.</div>`}
       </div>
-    </body>
-    </html>
-  `;
+  `);
 
   showSpinner("Chargement des sections…");
   const frame = $("frame");
@@ -405,13 +441,11 @@ function renderFixedTopBottom(){
 function loadFixedPage(which){
   const frame = document.getElementById("frame"); // <-- change id if needed
   if(which === "welcome"){
-    frame.srcdoc = `<html><body style="font-family:Arial;padding:18px">
-      <h2>Bienvenue</h2><p>Choisissez une section dans le menu à gauche.</p>
-    </body></html>`;
+    frame.srcdoc = wrapDoc(`
+      <h2>Bienvenue</h2><p>Choisissez une section dans le menu à gauche.</p>`);
   } else {
-    frame.srcdoc = `<html><body style="font-family:Arial;padding:18px">
-      <h2>Contact</h2><p>Email: <a href="mailto:demo@local">demo@local</a></p>
-    </body></html>`;
+    frame.srcdoc = wrapDoc(`
+      <h2>Contact</h2><p>Email: <a href="mailto:demo@local">demo@local</a></p>`);
   }
 }
 
