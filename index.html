@@ -107,10 +107,11 @@
       gap:12px;
     }
     .title{
-      font-weight:700;
-      font-size:18px;
+      font-weight:750;
+      font-size:24px;
       letter-spacing:0.2px;
       margin:0;
+	  margin-bottom:12px;
     }
     .btn{
       border:1px solid var(--border);
@@ -130,8 +131,13 @@
       background:white;
       box-sizing:border-box;
     }
-
+	
     /* left menu */
+	
+	#audienceWrap{
+	  margin-bottom:16px;
+	}
+
     #menu{
       overflow:auto;
       padding-right:4px;
@@ -194,7 +200,22 @@
       height:100%;
       border:none;
     }
+	
+	#fixedTop{ margin-bottom:8px; }
+	#fixedBottom{ margin-top:8px; }
 
+	#fixedTop, #fixedBottom{
+	  border-bottom:1px solid rgba(229,231,235,0.25);
+	  padding-bottom:6px;
+	}
+
+	#fixedBottom{
+	  border-bottom:none;
+	  border-top:1px solid rgba(229,231,235,0.25);
+	  padding-top:6px;
+	  padding-bottom:0;
+	}
+	
     /* status */
     #status{ color:var(--muted); font-size:12px; }
     .danger{ color:#b91c1c; }
@@ -213,8 +234,9 @@
     <select id="audience"></select>
   </div>
 </div>
-
+	<div id="fixedTop"></div>
     <div id="menu"></div>
+	<div id="fixedBottom"></div>
 
     <div id="status"></div>
   </aside>

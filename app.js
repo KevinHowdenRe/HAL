@@ -187,8 +187,8 @@ async function onAudienceChange(force=false) {
       if (secs.length) navigateToSection(secs[0]);
     }
 
-    if (force) setStatus(`🛠️ Designed for: ${label}`);
-    else setStatus(`🛠️ Designed for : ${label}`);
+    if (force) setStatus(`🛠️ Conçu pour: ${label}`);
+    else setStatus(`🛠️ Conçu pour : ${label}`);
   } catch (e) {
     setStatus("Audience/menu error: " + e.message, true);
   }
@@ -374,6 +374,41 @@ function updateAudienceVisibility() {
   const sel = document.getElementById("audience");
   const wrap = document.getElementById("audienceWrap");
   wrap.style.display = (sel && sel.options.length >= 2) ? "" : "none";
+}
+
+// ---- Pages fixes ----------
+function renderFixedTopBottom(){
+  const top = document.getElementById("fixedTop");
+  const bottom = document.getElementById("fixedBottom");
+  if(!top || !bottom) return;
+
+  const mk = (label, onClick) => {
+    const a = document.createElement("a");
+    a.className = "menu-item";
+    a.href = "#";
+    a.innerHTML = `<span>${label}</span><span class="count"></span>`;
+    a.onclick = (e) => { e.preventDefault(); onClick(); };
+    return a;
+  };
+
+  top.innerHTML = "";
+  bottom.innerHTML = "";
+
+  top.appendChild(mk("Bienvenue", () => loadFixedPage("welcome")));
+  bottom.appendChild(mk("Contact", () => loadFixedPage("contact")));
+}
+
+function loadFixedPage(which){
+  const frame = document.getElementById("frame"); // <-- change id if needed
+  if(which === "welcome"){
+    frame.srcdoc = `<html><body style="font-family:Arial;padding:18px">
+      <h2>Bienvenue</h2><p>Choisissez une section dans le menu à gauche.</p>
+    </body></html>`;
+  } else {
+    frame.srcdoc = `<html><body style="font-family:Arial;padding:18px">
+      <h2>Contact</h2><p>Email: <a href="mailto:demo@local">demo@local</a></p>
+    </body></html>`;
+  }
 }
 
 // ---------- Boot ----------
