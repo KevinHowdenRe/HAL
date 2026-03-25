@@ -413,6 +413,7 @@ function loadFixedPage(which){
 
 // ---------- Boot ----------
 (async function boot(){
+  loadFixedPage();
   setAuthButton();
 
   if (!token) {
