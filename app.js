@@ -1,10 +1,7 @@
 // HAL front (fixed API base + fixed site_id)
-// - Login popup panel: sections only (from backend menu keys)// - Login popup (prompt)
-// - Clicking a section shows a "Section hub" with cards (srcdoc)
-// - Clicking a card opens the real page in iframe: /{site}/{section}/{page}?t=TOKEN
 
 const API_BASE = "https://maliwann.pythonanywhere.com";
-const SITE_ID  = "HAL";
+const SITE_ID = "HAL";
 
 // token is a simple opaque token stored locally for convenience
 let token = localStorage.getItem("hal_token") || null;
@@ -16,6 +13,7 @@ let CURRENT_SECTION = null;
 const $ = (id) => document.getElementById(id);
 
 let spinnerTimer = null;
+
 function showSpinner(msg="Loading…") {
   const sp = $("spinner");
   if (!sp) return;
@@ -25,6 +23,7 @@ function showSpinner(msg="Loading…") {
   clearTimeout(spinnerTimer);
   spinnerTimer = setTimeout(() => hideSpinner(), 15000);
 }
+
 function hideSpinner() {
   const sp = $("spinner");
   if (!sp) return;
@@ -34,7 +33,9 @@ function hideSpinner() {
 }
 
 function setStatus(msg, isError=false) {
-  $("status").innerHTML = isError ? `<span class="danger">${escapeHtml(msg)}</span>` : escapeHtml(msg);
+  const el = $("status");
+  el.textContent = msg;
+  el.classList.toggle("danger", !!isError);
 }
 
 function setAuthButton() {
@@ -54,7 +55,6 @@ async function apiFetch(path, { method="GET", headers={}, body=null } = {}) {
   const res = await fetch(API_BASE + path, init);
   const ct = (res.headers.get("content-type") || "").toLowerCase();
   const data = ct.includes("application/json") ? await res.json() : await res.text();
-
   if (!res.ok) {
     const msg = (data && data.error) ? data.error : (typeof data === "string" ? data : `HTTP ${res.status}`);
     const err = new Error(msg);
@@ -69,15 +69,10 @@ async function apiFetch(path, { method="GET", headers={}, body=null } = {}) {
 async function loginPopup() {
   const email = window.prompt("Email:");
   if (!email) return;
-
   const password = window.prompt("Password:");
   if (password === null) return;
 
-  const d = await apiFetch("/api/login", {
-    method: "POST",
-    body: { email: email.trim(), password }
-  });
-
+  const d = await apiFetch("/api/login", { method: "POST", body: { email: email.trim(), password } });
   if (!d.ok || !d.token) throw new Error(d.error || "login_failed");
 
   token = d.token;
@@ -91,17 +86,12 @@ async function loginPopup() {
 
 async function logout() {
   try {
-    if (token) {
-      await apiFetch("/api/logout", {
-        method: "POST",
-        headers: { ...authHeaders() }
-      });
-    }
-  } catch (_) {
-    // ignore
-  }
+    if (token) await apiFetch("/api/logout", { method: "POST", headers: { ...authHeaders() } });
+  } catch (_) {}
+
   token = null;
   localStorage.removeItem("hal_token");
+
   setAuthButton();
   $("audience").innerHTML = "";
   $("menu").innerHTML = "";
@@ -109,6 +99,7 @@ async function logout() {
   $("currentUrl").textContent = "-";
   MENU_CACHE = {};
   CURRENT_SECTION = null;
+
   setStatus("👋 Logged out");
 }
 
@@ -116,10 +107,7 @@ async function logout() {
 async function loadMemberships() {
   if (!token) throw new Error("not_logged_in");
 
-  const d = await apiFetch("/api/me?site_id=" + encodeURIComponent(SITE_ID), {
-    headers: { ...authHeaders() }
-  });
-
+  const d = await apiFetch("/api/me?site_id=" + encodeURIComponent(SITE_ID), { headers: { ...authHeaders() } });
   const sel = $("audience");
   sel.innerHTML = "";
 
@@ -139,22 +127,23 @@ async function loadMemberships() {
   }
 }
 
-// ---------- Audience switch (auto triggers set-audience + menu) ----------
+// ---------- Audience switch ----------
 async function setAudience(audience) {
   if (!token) throw new Error("not_logged_in");
+
   const d = await apiFetch("/api/set-audience", {
     method: "POST",
     headers: { ...authHeaders() },
     body: { site_id: SITE_ID, audience }
   });
+
   if (!d.ok) throw new Error(d.error || "set_audience_failed");
 }
 
 async function loadMenu() {
   if (!token) throw new Error("not_logged_in");
-  const d = await apiFetch("/api/menu?site_id=" + encodeURIComponent(SITE_ID), {
-    headers: { ...authHeaders() }
-  });
+
+  const d = await apiFetch("/api/menu?site_id=" + encodeURIComponent(SITE_ID), { headers: { ...authHeaders() } });
   if (!d.ok) throw new Error(d.error || "menu_failed");
 
   MENU_CACHE = d.menu || {};
@@ -162,11 +151,21 @@ async function loadMenu() {
   setStatus("✅ Menu loaded");
 }
 
+// NEW: active highlight helper
+function setActiveSection(section) {
+  document.querySelectorAll("a.menu-item").forEach(a => {
+    a.classList.toggle("active", a.dataset.section === section);
+  });
+}
+
 // when dropdown changes => set-audience + reload menu + refresh current view
 async function onAudienceChange(force=false) {
   if (!token) return;
 
-  const audience = $("audience").value;
+  const sel = $("audience");
+  const audience = sel.value;
+  const label = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : audience;
+
   if (!audience) return;
 
   try {
@@ -185,8 +184,7 @@ async function onAudienceChange(force=false) {
       if (secs.length) navigateToSection(secs[0]);
     }
 
-    if (force) setStatus(`✅ View active: ${audience}`);
-    else setStatus(`✅ View active: ${audience}`);
+    setStatus(`🛠️ Designed for: ${label}`);
   } catch (e) {
     setStatus("Audience/menu error: " + e.message, true);
   }
@@ -199,7 +197,7 @@ function renderSectionsOnly(menu) {
 
   const sections = Object.keys(menu || {});
   if (!sections.length) {
-    menuDiv.innerHTML = `<div class="muted">No pages for this view.</div>`;
+    menuDiv.innerHTML = `No pages for this view.`;
     return;
   }
 
@@ -208,6 +206,8 @@ function renderSectionsOnly(menu) {
 
     const a = document.createElement("a");
     a.className = "menu-item";
+    a.dataset.section = section;
+
     a.href = "#/section/" + encodeURIComponent(section);
 
     const left = document.createElement("span");
@@ -227,6 +227,9 @@ function renderSectionsOnly(menu) {
 
     menuDiv.appendChild(a);
   });
+
+  // keep highlight after menu rebuild
+  if (CURRENT_SECTION) setActiveSection(CURRENT_SECTION);
 }
 
 // ---------- Section hub (cards) ----------
@@ -239,81 +242,56 @@ function openSectionHub(section) {
   if (!token) { setStatus("Please login first.", true); return; }
 
   CURRENT_SECTION = section;
+  setActiveSection(section);
 
   const pages = (MENU_CACHE && MENU_CACHE[section]) ? MENU_CACHE[section] : [];
   $("currentUrl").textContent = `/${SITE_ID}/${section}`;
 
   const cardsHtml = (pages || []).map(p => {
     const title = escapeHtml(p.title || p.id);
-    const pid = encodeURIComponent(p.id);
-    const sec = encodeURIComponent(section);
     const path = `/${SITE_ID}/${section}/${p.id}`;
     return `
-      <div class="card" onclick="parent.location.hash='#/${sec}/${pid}'" role="button" tabindex="0">
-        <div class="card-title">${title}</div>
-        <div class="card-sub">${escapeHtml(path)}</div>
+      <div style="border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin:10px 0;font-family:Arial;">
+        <div style="font-weight:700;font-size:16px;margin-bottom:6px;">${title}</div>
+        <div style="color:#6b7280;font-size:12px;">${escapeHtml(path)}</div>
+        <div style="margin-top:10px;">
+          <a href="#/${encodeURIComponent(section)}/${encodeURIComponent(p.id)}" style="color:#2563eb;text-decoration:none;font-weight:700;">Open</a>
+        </div>
       </div>
     `;
   }).join("");
 
   const html = `
-    <!doctype html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <style>
-        body{font-family:Arial,system-ui;margin:0;padding:18px;color:#111827;background:#fff}
-        h1{font-size:26px;margin:0 0 10px 0}
-        .muted{color:#6b7280;font-size:13px;margin-bottom:14px}
-        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-        .card{
-          border:1px solid #e5e7eb;border-radius:12px;padding:12px;
-          cursor:pointer;background:#fff;
-          transition: transform .06s ease, box-shadow .06s ease;
-        }
-        .card:hover{transform: translateY(-1px); box-shadow: 0 4px 18px rgba(0,0,0,0.06)}
-        .card-title{font-weight:700;margin-bottom:6px}
-        .card-sub{color:#6b7280;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      </style>
-    </head>
-    <body>
-      <h1>${escapeHtml(section)}</h1>
-      <div class="muted">Select a card to open the page.</div>
-      <div class="grid">
-        ${cardsHtml || `<div class="muted">No pages in this section.</div>`}
-      </div>
-    </body>
-    </html>
+    <div style="padding:18px;font-family:Arial;">
+      <div style="font-weight:800;font-size:28px;margin-bottom:8px;">${escapeHtml(section)}</div>
+      <div style="color:#6b7280;margin-bottom:14px;">Select a card to open the page.</div>
+      ${cardsHtml || `<div style="color:#6b7280;">No pages in this section.</div>`}
+    </div>
   `;
 
   showSpinner("Loading section…");
   const frame = $("frame");
-  frame.src = "about:blank";   // reset
-  frame.srcdoc = html;        // local render
+  frame.src = "about:blank";
+  frame.srcdoc = html; // local render
 }
 
 // ---------- Real page open (iframe) ----------
 function openPage(section, pageId) {
   if (!token) { setStatus("Please login first.", true); return; }
 
+  CURRENT_SECTION = section;
+  setActiveSection(section);
+
   const urlPath = `/${encodeURIComponent(SITE_ID)}/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}`;
   const src = API_BASE + urlPath + "?t=" + encodeURIComponent(token);
 
   $("currentUrl").textContent = urlPath;
-
   showSpinner("Loading page…");
 
   const frame = $("frame");
-
-  // ✅ IMPORTANT: srcdoc can be sticky -> remove it
   frame.removeAttribute("srcdoc");
-
-  // Reset then navigate (helps browsers apply the navigation)
   frame.src = "about:blank";
-  setTimeout(() => {
-    frame.src = src;
-  }, 0);
+  setTimeout(() => { frame.src = src; }, 0);
 }
 
 // Bind spinner to iframe events
@@ -330,14 +308,15 @@ function openPage(section, pageId) {
 function parseHash() {
   const h = location.hash || "";
   if (!h.startsWith("#/")) return null;
+
   const parts = h.slice(2).split("/").map(decodeURIComponent).filter(Boolean);
 
-  // #/section/<sectionName>
+  // #/section/{section}
   if (parts[0] === "section" && parts.length >= 2) {
-    return { kind: "section", section: parts.slice(1).join("/") }; // allow section names with slashes if ever
+    return { kind: "section", section: parts.slice(1).join("/") };
   }
 
-  // #/<section>/<pageId>
+  // #/{section}/{pageId...}
   if (parts.length >= 2) {
     return { kind: "page", section: parts[0], pageId: parts.slice(1).join("/") };
   }
@@ -348,7 +327,6 @@ function parseHash() {
 window.addEventListener("hashchange", () => {
   const r = parseHash();
   if (!r) return;
-
   if (r.kind === "section") openSectionHub(r.section);
   if (r.kind === "page") openPage(r.section, r.pageId);
 });
@@ -363,7 +341,6 @@ $("btnAuth").onclick = async () => {
 };
 
 $("audience").addEventListener("change", () => {
-  // whenever dropdown changes => triggers set-audience + reload menu
   onAudienceChange(false);
 });
 
@@ -381,14 +358,12 @@ $("audience").addEventListener("change", () => {
     await loadMemberships();
     await onAudienceChange(true);
 
-    // If URL hash already points somewhere, open it
     const r = parseHash();
     if (r) {
       if (r.kind === "section") openSectionHub(r.section);
       if (r.kind === "page") openPage(r.section, r.pageId);
     }
   } catch (e) {
-    // token may be expired/revoked
     setStatus("Session invalid. Please login again.", true);
     token = null;
     localStorage.removeItem("hal_token");
@@ -399,7 +374,10 @@ $("audience").addEventListener("change", () => {
 // ---------- Helpers ----------
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
   }[c]));
 }
-// - Audience dropdown triggers set-audience + menu reload
