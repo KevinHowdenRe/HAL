@@ -83,7 +83,7 @@ async function loginPopup() {
   token = d.token;
   localStorage.setItem("hal_token", token);
   setAuthButton();
-  setStatus("✅ Logged in");
+  setStatus("✅ Connecté");
 
   await loadMemberships();
   await onAudienceChange(true); // set-audience + menu
@@ -109,7 +109,7 @@ async function logout() {
   $("currentUrl").textContent = "-";
   MENU_CACHE = {};
   CURRENT_SECTION = null;
-  setStatus("👋 Logged out");
+  setStatus("🔒 Déconnecté");
 }
 
 // ---------- Memberships ----------
@@ -129,7 +129,7 @@ async function loadMemberships() {
     opt.textContent = m.label || m.audience;
     sel.appendChild(opt);
   });
-
+  updateAudienceVisibility();
   if (d.active_audience) sel.value = d.active_audience;
 
   if (!(d.memberships || []).length) {
@@ -289,7 +289,7 @@ function openSectionHub(section) {
     </html>
   `;
 
-  showSpinner("Loading section…");
+  showSpinner("Chargement des sections…");
   const frame = $("frame");
   frame.src = "about:blank";   // reset
   frame.srcdoc = html;        // local render
@@ -297,14 +297,14 @@ function openSectionHub(section) {
 
 // ---------- Real page open (iframe) ----------
 function openPage(section, pageId) {
-  if (!token) { setStatus("Please login first.", true); return; }
+  if (!token) { setStatus("Connexion requise.", true); return; }
 
   const urlPath = `/${encodeURIComponent(SITE_ID)}/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}`;
   const src = API_BASE + urlPath + "?t=" + encodeURIComponent(token);
 
   $("currentUrl").textContent = urlPath;
 
-  showSpinner("Loading page…");
+  showSpinner("Chargement…");
 
   const frame = $("frame");
 
@@ -369,17 +369,25 @@ $("audience").addEventListener("change", () => {
   onAudienceChange(false);
 });
 
+
+function updateAudienceVisibility() {
+  const sel = document.getElementById("audience");
+  const wrap = document.getElementById("audienceWrap");
+  wrap.style.display = (sel && sel.options.length >= 2) ? "" : "none";
+}
+
 // ---------- Boot ----------
 (async function boot(){
   setAuthButton();
 
   if (!token) {
-    setStatus("🔐 Please login.");
+    setStatus("🔐 Connexion requise.");
     return;
   }
 
   try {
-    setStatus("🔁 Restoring session…");
+    setStatus("🔁 Restoration de session…");
+	
     await loadMemberships();
     await onAudienceChange(true);
 
