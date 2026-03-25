@@ -31,6 +31,70 @@
       gap:12px;
       overflow:hidden;
     }
+	
+	
+	
+	
+	/* LEFT PANEL COLOR THEME */
+aside{
+  background:#173F35;
+  color:#fff;
+  border-right:1px solid rgba(255,255,255,0.12); /* optionnel */
+}
+
+/* Tout le texte “muted” en version claire */
+aside .muted{
+  color:rgba(255,255,255,0.75);
+}
+
+/* Dropdown / inputs visibles sur fond dark */
+aside select{
+  background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.18);
+  color:#fff;
+}
+aside select option{
+  color:#111827; /* pour que les options restent lisibles dans le menu natif */
+}
+
+/* Menu items : blanc + gras */
+aside a.menu-item{
+  color:#fff;
+  font-weight:700;
+  border-bottom:1px solid rgba(255,255,255,0.12);
+}
+
+/* Le petit compteur à droite */
+aside a.menu-item .count{
+  color:rgba(255,255,255,0.75);
+  font-weight:600;
+}
+
+/* Hover : léger highlight */
+aside a.menu-item:hover{
+  background:rgba(255,255,255,0.06);
+  text-decoration:none;         /* tu peux laisser underline si tu veux */
+}
+
+/* L'état actif (cliqué) */
+aside a.menu-item.active{
+  background:#218D80;
+  border-radius:10px;
+  padding-left:10px;
+  padding-right:10px;
+}
+aside a.menu-item.active .count{
+  color:rgba(255,255,255,0.9);
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
     main{
       flex:1;
       padding:14px;
@@ -132,8 +196,7 @@
     iframe{
       width:100%;
       height:100%;
-      border:1px solid var(--border);
-      border-radius:10px;
+      border:none;
     }
 
     /* status */
