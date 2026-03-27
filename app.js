@@ -539,7 +539,7 @@ Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
 function thumbUrl(section, pageId) {
   // Keep it purely convention-based (no backend changes)
   // Example: /static/sites/HAL/thumbs/solutions/risk-map.png
-  return `${API_BASE}/static/sites/${encodeURIComponent(SITE_ID)}/thumbs/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}.png`;
+  return `${API_BASE}/sites/${encodeURIComponent(SITE_ID)}/thumbs/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}.png`;
 }
 
 function escapeHtml(s) {
