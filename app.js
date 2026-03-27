@@ -50,6 +50,19 @@ a:hover{ text-decoration:underline; }
 }
 .card-title{ font-weight:800; margin-bottom:6px; font-size:14px; letter-spacing:-0.01em; }
 .card-sub{ color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.card-row{ display:flex; gap:12px; align-items:center; }
+.thumb{
+  width:58px; height:58px;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  object-fit:cover;
+  background:#f9fafb;
+  flex:0 0 auto;
+}
+.card-text{ min-width:0; }
+.no-thumb .card-row{ gap:0; }
+
 `;
 
 
@@ -310,17 +323,25 @@ function openSectionHub(section) {
   $("currentUrl").textContent = `/${SITE_ID}/${section}`;
 
   const cardsHtml = (pages || []).map(p => {
-    const title = escapeHtml(p.title || p.id);
-    const pid = encodeURIComponent(p.id);
-    const sec = encodeURIComponent(section);
-    const path = `/${SITE_ID}/${section}/${p.id}`;
-    return `
-      <div class="card" onclick="parent.location.hash='#/${sec}/${pid}'" role="button" tabindex="0">
-        <div class="card-title">${title}</div>
-        <div class="card-sub">${escapeHtml(path)}</div>
+  const title = escapeHtml(p.title || p.id);
+  const pidEnc = encodeURIComponent(p.id);
+  const secEnc = encodeURIComponent(section);
+  const path = `/${SITE_ID}/${section}/${p.id}`;
+  const img = thumbUrl(section, p.id);
+
+  return `
+    <div class="card" onclick="parent.location.hash='#/${secEnc}/${pidEnc}'" role="button" tabindex="0">
+      <div class="card-row">
+        <img class="thumb" src="${img}" alt="" loading="lazy"
+             onerror="this.style.display='none'; this.closest('.card').classList.add('no-thumb');" />
+        <div class="card-text">
+          <div class="card-title">${title}</div>
+          <div class="card-sub">${escapeHtml(path)}</div>
+        </div>
       </div>
-    `;
-  }).join("");
+    </div>
+  `;
+}).join("");
 
   const html = wrapDoc(`
     
@@ -436,7 +457,7 @@ function renderFixedTopBottom(){
   top.innerHTML = "";
   bottom.innerHTML = "";
 
-  top.appendChild(mk("Bienvenue", () => loadFixedPage("welcome")));
+  top.appendChild(mk("Introduction", () => loadFixedPage("welcome")));
   bottom.appendChild(mk("Contact", () => loadFixedPage("contact")));
 }
 
@@ -514,6 +535,13 @@ Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
 })();
 
 // ---------- Helpers ----------
+
+function thumbUrl(section, pageId) {
+  // Keep it purely convention-based (no backend changes)
+  // Example: /static/sites/HAL/thumbs/solutions/risk-map.png
+  return `${API_BASE}/static/sites/${encodeURIComponent(SITE_ID)}/thumbs/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}.png`;
+}
+
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
