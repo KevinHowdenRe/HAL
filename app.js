@@ -79,6 +79,103 @@ a:hover{ text-decoration:underline; }
 `;
 
 
+const WELCOME_HTML = {
+  1: `<h1>Bienvenue</h1>
+	<p>
+	Cette plateforme est concue pour afficher différentes vues selon vos besoins. Ceci est la vue interne à ne pas partager en externe. 
+	</p>
+	<p>
+	Pour chacune des vues, les éléments partagés sont regroupés en 3 catégories : 
+	</p>
+	
+	<p>
+	La rubrique <strong>Articles</strong> regroupe des études réalisées en interne.   
+	</p>
+	<p>
+	La section <strong>Documentation</strong> fournit des tutoriels pour les outils à disposition en interne ainsi que certaines best practices. 
+    </p>	
+	<p>Dans <strong>Solutions</strong>, vous trouverez les outils développés pour les besoins internes et externes.  </p>
+	</p>
+	<p>Faire la demande par teams pour obtenir d'autres vues. Celles-ci seront alors sélectionnable dans l'onglet de gauche. Pour une démo en externe, utiliser le compte démo prévu à cet effet. </p>`,
+  2: `<h1>Welcome</h1>
+<p>This platform is designed to display different views depending on your needs. This is the internal view and should not be shared externally.</p>
+<p>For each view, the shared elements are grouped into three categories:</p>
+<p>The Articles section contains studies carried out internally.</p>
+<p>The Documentation section provides tutorials for the internal tools available, as well as certain best practices.</p>
+<p>In Solutions, you will find the tools developed to meet both internal and external needs.</p>
+
+<p>Make the request via Teams to obtain additional views. These will then become selectable in the left‑hand tab.
+For an external demo, use the demo account provided for this purpose.</p>
+
+`,
+  3: `<h1>Bienvenue</h1>
+	<p>
+	Cet espace vous donne accès à vos analyses, rapports et outils personnalisés. 
+	</p>
+	<p>
+	Utilisez le menu à gauche pour naviguer entre les différentes sections.
+	</p>
+	<p>
+	La rubrique <strong>Articles</strong> regroupe les études réalisées ou partagées avec vous.  
+	</p>
+	<p>
+	La section <strong>Documentation</strong> explique en détail comment utiliser nos outils, ce que signifie notre approche "Client Side" notamment en terme de sécurité et confidentialité de la donnée. 
+    </p>	
+	<p>Dans <strong>Solutions</strong>, vous trouverez les outils développés pour vos besoins.  </p>
+	<p>Enfin, la page <strong>Contact</strong> vous permet d’échanger avec nous autour de vos projets.
+	</p>`
+};
+
+const CONTACT_HTML = {
+  1: `<h1>Contact</h1><p><a href="https://teams.microsoft.com/l/chat/48:notes/conversations?context=%7B%22contextType%22%3A%22chat%22%7D">En direct ou par teams</a></p>`,
+  2: `<h1>Contact</h1><p><a href="https://teams.microsoft.com/l/chat/48:notes/conversations?context=%7B%22contextType%22%3A%22chat%22%7D">Send us a team chat</a> or catch us here :</p>
+  <iframe
+  width="100%"
+  height="300"
+  style="border:0; border-radius:8px;"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.548812977981!2d2.341953!3d48.874051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e15c3e2d4d1%3A0x8e3e6b0e0ef5c975!2s14%20Rue%20La%20Fayette%2C%2075009%20Paris!5e0!3m2!1sfr!2sfr!4v0000000000000">
+</iframe>`,
+  3: `<h1>Contact</h1>
+
+<p>
+Pour toute question, demande d’information ou échange autour de vos projets, vous pouvez nous joindre directement via les coordonnées ci‑dessous.
+<iframe
+  width="100%"
+  height="300"
+  style="border:0; border-radius:8px;"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.548812977981!2d2.341953!3d48.874051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e15c3e2d4d1%3A0x8e3e6b0e0ef5c975!2s14%20Rue%20La%20Fayette%2C%2075009%20Paris!5e0!3m2!1sfr!2sfr!4v0000000000000">
+</iframe></p>
+
+<p>
+Email : <a href="mailto:demo@local">demo@local</a><br>
+Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
+</p>
+
+<p>Nous sommes situés au 14 rue Lafayette, Paris :</p>
+
+<iframe
+  width="100%"
+  height="300"
+  style="border:0; border-radius:8px;"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.548812977981!2d2.341953!3d48.874051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e15c3e2d4d1%3A0x8e3e6b0e0ef5c975!2s14%20Rue%20La%20Fayette%2C%2075009%20Paris!5e0!3m2!1sfr!2sfr!4v0000000000000">
+</iframe>`
+};
+
+
+
+
+
+
+
 function wrapDoc(bodyHtml, title=""){
   return `<!doctype html><html><head>
     <meta charset="utf-8">
@@ -357,7 +454,10 @@ function openSectionHub(section) {
   const html = wrapDoc(`
     
       <h1>${escapeHtml(section)}</h1>
-      <div class="muted">Select a card to open the page.</div>
+      <div class="muted"></div>
+	  <br>
+	  <br>
+	  <br>
       <div class="grid">
         ${cardsHtml || `<div class="muted">No pages in this section.</div>`}
       </div>
@@ -474,43 +574,14 @@ function renderFixedTopBottom(){
 
 function loadFixedPage(which){
   const frame = document.getElementById("frame"); // <-- change id if needed
+  
+  const aud = document.getElementById("audience").value || "";
+  const v = audienceVersion(aud);
+
   if(which === "welcome"){
-    frame.srcdoc = wrapDoc(`
-      <h2>Bienvenue</h2>
-	<p>
-	Cet espace vous donne accès à vos analyses, rapports et outils personnalisés. 
-	Utilisez le menu à gauche pour naviguer entre les différentes sections.
-	</p>
-	<p>
-	La rubrique <strong>Articles</strong> regroupe les études réalisées ou partagées avec vous.  
-	La section <strong>Documentation</strong> explique en détail comment utiliser nos outils, ce que signifie notre approche "Client Side" notamment en terme de sécurité et confidentialité de la donnée.  
-	Dans <strong>Solutions</strong>, vous trouverez les outils développés pour vos besoins.  
-	Enfin, la page <strong>Contact</strong> vous permet d’échanger avec nous autour de vos projets.
-	</p>`);
+    frame.srcdoc = wrapDoc(WELCOME_HTML[v] || WELCOME_HTML[3]);
   } else {
-    frame.srcdoc = wrapDoc(`
-      <h2>Contact</h2>
-
-<p>
-Pour toute question, demande d’information ou échange autour de vos projets, vous pouvez nous joindre directement via les coordonnées ci‑dessous.
-</p>
-
-<p>
-Email : <a href="mailto:demo@local">demo@local</a><br>
-Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
-</p>
-
-<p>Nous sommes situés au 14 rue Lafayette, Paris :</p>
-
-<iframe
-  width="100%"
-  height="300"
-  style="border:0; border-radius:8px;"
-  loading="lazy"
-  allowfullscreen
-  referrerpolicy="no-referrer-when-downgrade"
-  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.548812977981!2d2.341953!3d48.874051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e15c3e2d4d1%3A0x8e3e6b0e0ef5c975!2s14%20Rue%20La%20Fayette%2C%2075009%20Paris!5e0!3m2!1sfr!2sfr!4v0000000000000">
-</iframe>`);
+    frame.srcdoc = wrapDoc(CONTACT_HTML[v] || CONTACT_HTML[3]);
   }
 }
 
@@ -547,10 +618,17 @@ Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
 
 // ---------- Helpers ----------
 
+function audienceVersion(aud) {
+  if (aud === "internal") return 1;
+  if (aud === "internal_uk") return 2;
+  return 3;
+}
+
+
 function thumbUrl(section, pageId) {
   // Keep it purely convention-based (no backend changes)
-  // Example: /static/sites/HAL/thumbs/solutions/risk-map.png
-  return `${API_BASE}/sites/${encodeURIComponent(SITE_ID)}/thumbs/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}.png`;
+  // Example: /static/sites/HAL/thumbs/solutions/risk-map.webp
+  return `${API_BASE}/sites/${encodeURIComponent(SITE_ID)}/thumbs/${encodeURIComponent(section)}/${encodeURIComponent(pageId)}.webp`;
 }
 
 function escapeHtml(s) {
