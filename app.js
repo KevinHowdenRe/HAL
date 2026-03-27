@@ -34,35 +34,48 @@ a{ color:var(--accent); text-decoration:none; font-weight:500; }
 a:hover{ text-decoration:underline; }
 .container{ max-width:1100px; margin:0 auto; }
 .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; }
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  cursor:pointer;
+.card.notion {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
   transition: transform .08s ease, box-shadow .08s ease, border-color .08s ease;
   box-shadow: 0 1px 0 rgba(15,23,42,.04);
+  padding: 0; /* Notion n'a pas de padding global */
 }
-.card:hover{
+
+.card.notion:hover {
   transform: translateY(-1px);
   border-color: rgba(33,141,128,.35);
   box-shadow: 0 10px 24px rgba(15,23,42,.08);
 }
-.card-title{ font-weight:800; margin-bottom:6px; font-size:14px; letter-spacing:-0.01em; }
-.card-sub{ color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-.card-row{ display:flex; gap:12px; align-items:center; }
-.thumb{
-  width:58px; height:58px;
-  border-radius:10px;
-  border:1px solid #e5e7eb;
-  object-fit:cover;
-  background:#f9fafb;
-  flex:0 0 auto;
+.card-cover {
+  height: 140px;
+  background-size: cover;
+  background-position: center;
+  background-color: #f3f4f6;
 }
-.card-text{ min-width:0; }
-.no-thumb .card-row{ gap:0; }
 
+.card-content {
+  padding: 14px;
+}
+
+.card-title {
+  font-weight: 800;
+  margin-bottom: 6px;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.card-sub {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 `;
 
 
@@ -330,16 +343,14 @@ function openSectionHub(section) {
   const img = thumbUrl(section, p.id);
 
   return `
-    <div class="card" onclick="parent.location.hash='#/${secEnc}/${pidEnc}'" role="button" tabindex="0">
-      <div class="card-row">
-        <img class="thumb" src="${img}" alt="" loading="lazy"
-             onerror="this.style.display='none'; this.closest('.card').classList.add('no-thumb');" />
-        <div class="card-text">
-          <div class="card-title">${title}</div>
-          <div class="card-sub">${escapeHtml(path)}</div>
-        </div>
-      </div>
-    </div>
+   <div class="card notion" onclick="parent.location.hash='#/${secEnc}/${pidEnc}'">
+  <div class="card-cover" style="background-image:url('${img}')"></div>
+
+  <div class="card-content">
+    <div class="card-title">${title}</div>
+    <div class="card-sub">${escapeHtml(path)}</div>
+  </div>
+</div>
   `;
 }).join("");
 
