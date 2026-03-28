@@ -127,7 +127,7 @@ For an external demo, use the demo account provided for this purpose.</p>
 };
 
 const CONTACT_HTML = {
-  1: `<h1>Contact</h1><p><a href="https://teams.microsoft.com/l/chat/48:notes/conversations?context=%7B%22contextType%22%3A%22chat%22%7D">En direct ou par teams</a></p>`,
+  1: `<h1>Contact</h1><p>En direct ou <a href="https://teams.microsoft.com/l/chat/48:notes/conversations?context=%7B%22contextType%22%3A%22chat%22%7D">par teams</a></p>`,
   2: `<h1>Contact</h1><p><a href="https://teams.microsoft.com/l/chat/48:notes/conversations?context=%7B%22contextType%22%3A%22chat%22%7D">Send us a team chat</a> or catch us here :</p>
   <iframe
   width="100%"
@@ -142,15 +142,7 @@ const CONTACT_HTML = {
 
 <p>
 Pour toute question, demande d’information ou échange autour de vos projets, vous pouvez nous joindre directement via les coordonnées ci‑dessous.
-<iframe
-  width="100%"
-  height="300"
-  style="border:0; border-radius:8px;"
-  loading="lazy"
-  allowfullscreen
-  referrerpolicy="no-referrer-when-downgrade"
-  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.548812977981!2d2.341953!3d48.874051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e15c3e2d4d1%3A0x8e3e6b0e0ef5c975!2s14%20Rue%20La%20Fayette%2C%2075009%20Paris!5e0!3m2!1sfr!2sfr!4v0000000000000">
-</iframe></p>
+
 
 <p>
 Email : <a href="mailto:demo@local">demo@local</a><br>
