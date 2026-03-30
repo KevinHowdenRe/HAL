@@ -293,6 +293,16 @@
   }
 }
 
+
+/* Par défaut (écran "grand") : pas besoin du bouton Menu */
+#btnMenu{ display:none; }
+
+/* En mode mobile (quand le panel devient un drawer) : on affiche le bouton */
+@media (max-width: 820px){
+  #btnMenu{ display:inline-block; }
+}
+
+
   </style>
 </head>
 
