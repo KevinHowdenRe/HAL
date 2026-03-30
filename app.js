@@ -239,6 +239,123 @@ async function apiFetch(path, { method="GET", headers={}, body=null } = {}) {
 }
 
 // ---------- Auth ----------
+
+async function loginSweet() {
+  if (typeof Swal === "undefined") {
+    setStatus("SweetAlert2 not loaded. Add the CDN script in <head>.", true);
+    return;
+  }
+
+  // 1) Ask email + choose mode
+  const first = await Swal.fire({
+    title: "Sign in",
+    html: `
+      <div style="text-align:left; font-size:13px; color:#6b7280; margin-bottom:8px;">
+        Enter your email. Choose <b>Request access</b> (magic link) or <b>Manage</b> (password).
+      </div>
+      <input id="swal-email" class="swal2-input" placeholder="email@domain.com" autocomplete="username" />
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    cancelButtonText: "Cancel",
+    showDenyButton: true,
+    confirmButtonText: "Request access",
+    denyButtonText: "Manage",
+    preConfirm: () => {
+      const email = document.getElementById("swal-email").value.trim();
+      if (!email) {
+        Swal.showValidationMessage("Please enter an email.");
+        return false;
+      }
+      return { email };
+    }
+  });
+
+  if (first.isDismissed) return;
+
+  // Email is validated only when "confirm" (Request access) is clicked.
+  // For "Manage" we need to also validate email (so we read it here safely).
+  const emailInput = document.getElementById("swal-email");
+  const email = (first.value && first.value.email) || (emailInput ? emailInput.value.trim() : "");
+
+  if (!email) {
+    // Happens if user clicked "Manage" without preConfirm validation
+    await Swal.fire({ icon: "warning", title: "Missing email", text: "Please enter an email." });
+    return;
+  }
+
+  // 2A) Request access (magic link email)
+  if (first.isConfirmed) {
+    try {
+      await apiFetch("/api/auth/request-link", {
+        method: "POST",
+        body: { email, site_id: SITE_ID }
+      });
+      await Swal.fire({
+        icon: "success",
+        title: "Check your email",
+        text: "If authorized, you will receive a link (or multiple links) to sign in."
+      });
+      setStatus("✅ Request access sent (if authorized).");
+    } catch (e) {
+      await Swal.fire({ icon: "error", title: "Request failed", text: e.message });
+      setStatus("Request access error: " + e.message, true);
+    }
+    return;
+  }
+
+  // 2B) Manage (password login)
+  if (first.isDenied) {
+    const second = await Swal.fire({
+      title: "Manage (password)",
+      html: `
+        <div style="text-align:left; font-size:13px; color:#6b7280; margin-bottom:8px;">
+          Email:
+          <div style="margin-top:4px; font-weight:700; color:#111827;">${escapeHtml(email)}</div>
+        </div>
+        <input id="swal-pass" type="password" class="swal2-input" placeholder="Password" autocomplete="current-password" />
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Login",
+      preConfirm: () => {
+        const password = document.getElementById("swal-pass").value;
+        if (!password) {
+          Swal.showValidationMessage("Please enter a password.");
+          return false;
+        }
+        return { password };
+      }
+    });
+
+    if (second.isDismissed) return;
+
+    try {
+      const d = await apiFetch("/api/login", {
+        method: "POST",
+        body: { email, password: second.value.password }
+      });
+
+      if (!d.ok || !d.token) throw new Error(d.error || "login_failed");
+
+      token = d.token;
+      localStorage.setItem("hal_token", token);
+      setAuthButton();
+
+      // Your usual post-login flow
+      await loadMemberships();
+      await onAudienceChange(true);
+
+      setStatus("✅ Logged in (manage).");
+      await Swal.fire({ icon: "success", title: "Logged in", timer: 900, showConfirmButton: false });
+    } catch (e) {
+      await Swal.fire({ icon: "error", title: "Login failed", text: e.message });
+      setStatus("Login error: " + e.message, true);
+    }
+  }
+}
+
+
 async function loginPopup() {
   const email = window.prompt("Email:");
   if (!email) return;
@@ -288,6 +405,53 @@ async function logout() {
   CURRENT_SECTION = null;
   setStatus("🔒 Déconnecté");
 }
+
+
+// -------Magic Link -----------------
+function getHashQueryParam(name) {
+  const h = location.hash || "";
+  const idx = h.indexOf("?");
+  if (idx < 0) return null;
+  const qs = h.slice(idx + 1);
+  return new URLSearchParams(qs).get(name);
+}
+
+async function handleAuthRouteIfAny() {
+  const h = location.hash || "";
+  if (!h.startsWith("#/auth")) return false;
+
+  const oneTime = getHashQueryParam("t");
+  if (!oneTime) {
+    setStatus("Missing auth token in link.", true);
+    return true;
+  }
+
+  try {
+    setStatus("⏳ Signing you in…");
+    const d = await apiFetch("/api/auth/consume-link", {
+      method: "POST",
+      body: { token: oneTime }
+    });
+    if (!d.ok || !d.token) throw new Error(d.error || "consume_failed");
+
+    token = d.token;
+    localStorage.setItem("hal_token", token);
+    setAuthButton();
+
+    // remove token from URL
+    location.hash = "#/";
+
+    await loadMemberships();
+    await onAudienceChange(true);
+
+    setStatus(`✅ Logged in (audience: ${d.audience}).`);
+  } catch (e) {
+    setStatus("Auth link error: " + e.message, true);
+  }
+
+  return true;
+}
+
 
 // ---------- Memberships ----------
 async function loadMemberships() {
@@ -525,7 +689,7 @@ window.addEventListener("hashchange", () => {
 $("btnAuth").onclick = async () => {
   if (token) await logout();
   else {
-    try { await loginPopup(); }
+    try { await loginSweet(); }
     catch (e) { setStatus("Login error: " + e.message, true); }
   }
 };
@@ -582,6 +746,10 @@ function loadFixedPage(which){
   setAuthButton();
   renderFixedTopBottom();
   loadFixedPage("welcome");
+  
+  const handled = await handleAuthRouteIfAny();
+  if (handled) return;
+
   if (!token) {
     setStatus("🔐 Connexion requise.");
     return;
