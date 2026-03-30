@@ -248,6 +248,7 @@ async function loginSweet() {
 
   // 1) Ask email + choose mode
   const first = await Swal.fire({
+	heightAuto: false,
     title: "Sign in",
     html: `
       <div style="text-align:left; font-size:13px; color:#6b7280; margin-bottom:8px;">
