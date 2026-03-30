@@ -232,10 +232,72 @@
   background-color: #6b7280 !important; /* gris */
   color: white !important;
 }
+
+/* ============ MOBILE RESPONSIVE ============ */
+@media (max-width: 820px){
+  body{
+    display:block;          /* stop flex split */
+    height:100vh;
+    overflow:hidden;        /* prevent page scroll behind drawer */
+  }
+
+  /* main takes full screen */
+  main{
+    height:100vh;
+    padding:10px;
+  }
+
+  /* topbar becomes sticky so user always has access */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:var(--bg);
+    padding:10px 0;
+  }
+
+  /* Drawer behavior for the left panel */
+  aside{
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    width:min(86vw, 360px); /* use most of screen but not 80% hard; caps at 360 */
+    z-index:20;
+
+    transform:translateX(-105%);
+    transition:transform .22s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  }
+
+  body.menu-open aside{
+    transform:translateX(0);
+  }
+
+  /* Dark overlay behind the drawer */
+  #overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    z-index:15;
+    display:none;
+  }
+  body.menu-open #overlay{
+    display:block;
+  }
+
+  /* iframe area */
+  #frameWrap{
+    height: calc(100vh - 64px); /* approx topbar height */
+    min-height:0;
+  }
+}
+
   </style>
 </head>
 
 <body>
+<div id="overlay" aria-hidden="true"></div>
   <aside>
     <div>
       <div class="title">HAL</div>
@@ -256,7 +318,11 @@
   <main>
     <div class="topbar">
       <span class="pill" id="currentUrl">-</span>
-      <button class="btn" id="btnAuth">Login</button>
+      <div style="display:flex; gap:8px; align-items:center;">
+  <button class="btn" id="btnMenu" aria-label="Open menu">Menu</button>
+  <button class="btn" id="btnAuth">Login</button>
+</div>
+
     </div>
 
     <div id="frameWrap">

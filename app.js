@@ -797,3 +797,32 @@ function escapeHtml(s) {
   }[c]));
 }
 // - Audience dropdown triggers set-audience + menu reload
+
+
+
+
+(function(){
+  const btnMenu = document.getElementById("btnMenu");
+  const overlay = document.getElementById("overlay");
+
+  function openMenu(){ document.body.classList.add("menu-open"); }
+  function closeMenu(){ document.body.classList.remove("menu-open"); }
+  function toggleMenu(){ document.body.classList.toggle("menu-open"); }
+
+  if (btnMenu) btnMenu.addEventListener("click", toggleMenu);
+  if (overlay) overlay.addEventListener("click", closeMenu);
+
+  // Close drawer when a menu link is clicked (better UX on mobile)
+  const menu = document.getElementById("menu");
+  if (menu){
+    menu.addEventListener("click", (e) => {
+      const a = e.target.closest("a.menu-item");
+      if (a) closeMenu();
+    });
+  }
+
+  // Optional: close on ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenu();
+  });
+})();
