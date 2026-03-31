@@ -45,6 +45,16 @@ a:hover{ text-decoration:underline; }
   padding: 0; /* Notion n'a pas de padding global */
 }
 
+h1 {
+  font-size: 28px;
+  font-weight: 500;
+  color: #998542;
+}
+
+h2, h3, h4, h5, h6 {
+  color: #173F35;
+}
+
 .card.notion:hover {
   transform: translateY(-1px);
   border-color: rgba(33,141,128,.35);
