@@ -270,23 +270,26 @@ async function loginSweet() {
   // 1) Ask email + choose mode
   const first = await Swal.fire({
 	heightAuto: false,
-    title: "Sign in",
+    title: "Connexion",
     html: `
-      <div style="text-align:left; font-size:13px; color:#6b7280; margin-bottom:8px;">
-        Enter your email. Choose <b>Request access</b> (magic link) or <b>Manage</b> (password).
+      <div style="text-align:left; font-size:13px; margin-bottom:8px;">
+        <p><b>Lien d'accès</b>: Pour obtenir un lien à usage unique temporaire.</p>.</p>
+		<p><b>Compte</b> Pour une gestion de compte standard.
       </div>
+	  <br>
+	  <br>
       <input id="swal-email" class="swal2-input" placeholder="email@domain.com" autocomplete="username" />
     `,
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Cancel",
     showDenyButton: true,
-    confirmButtonText: "Request access",
-    denyButtonText: "Manage",
+    confirmButtonText: "Lien d'accès",
+    denyButtonText: "Compte",
     preConfirm: () => {
       const email = document.getElementById("swal-email").value.trim();
       if (!email) {
-        Swal.showValidationMessage("Please enter an email.");
+        Swal.showValidationMessage("Email requis");
         return false;
       }
       return { email };
@@ -331,11 +334,10 @@ async function loginSweet() {
     const second = await Swal.fire({
       title: "Manage (password)",
       html: `
-        <div style="text-align:left; font-size:13px; color:#6b7280; margin-bottom:8px;">
-          Email:
-          <div style="margin-top:4px; font-weight:700; color:#111827;">${escapeHtml(email)}</div>
+        <div style="text-align:left; font-size:13px;  margin-bottom:8px;">
+          <div style="margin-top:4px; font-weight:700; ">${escapeHtml(email)}</div>
         </div>
-        <input id="swal-pass" type="password" class="swal2-input" placeholder="Password" autocomplete="current-password" />
+        <input id="swal-pass" type="password" class="swal2-input" placeholder="Mot de passe" autocomplete="current-password" />
       `,
       focusConfirm: false,
       showCancelButton: true,
