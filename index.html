@@ -4,7 +4,319 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>HAL</title>
-  <link rel="stylesheet" href="https://maliwann.pythonanywhere.com/sites/HAL/css/core.css">
+  <style>
+  :root{
+      --border:#e5e7eb;
+      --muted:#6b7280;
+      --link:#2563eb;
+      --bg:#ffffff;
+      --soft:#f9fafb;
+      --text:#111827;
+    }
+    body{
+      font-family: Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      margin:0;
+      height:100vh;
+      display:flex;
+      background:var(--bg);
+      color:var(--text);
+    }
+    aside{
+      width:320px;
+      border-right:1px solid var(--border);
+      padding:14px;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow:hidden;
+    }
+	/* LEFT PANEL COLOR THEME */
+	aside{
+	  background:#173F35;
+	  color:#fff;
+	  border-right:1px solid rgba(255,255,255,0.12); /* optionnel */
+	}
+
+	/* Tout le texte “muted” en version claire */
+	aside .muted{
+	  color:rgba(255,255,255,0.75);
+	}
+
+	/* Dropdown / inputs visibles sur fond dark */
+	aside select{
+	  background:rgba(255,255,255,0.10);
+	  border:1px solid rgba(255,255,255,0.18);
+	  color:#fff;
+	}
+	aside select option{
+	  color:#111827; /* pour que les options restent lisibles dans le menu natif */
+	}
+
+	/* Menu items : blanc + gras */
+	aside a.menu-item{
+	  color:#fff;
+	  font-weight:700;
+	  border-bottom:1px solid rgba(255,255,255,0.12);
+	}
+
+	/* Le petit compteur à droite */
+	aside a.menu-item .count{
+	  color:rgba(255,255,255,0.75);
+	  font-weight:600;
+	}
+
+	/* Hover : léger highlight */
+	aside a.menu-item:hover{
+	  background:rgba(255,255,255,0.06);
+	  text-decoration:none;         /* tu peux laisser underline si tu veux */
+	}
+
+	/* L'état actif (cliqué) */
+	aside a.menu-item.active{
+	  background:#218D80;
+	  border-radius:10px;
+	  padding-left:10px;
+	  padding-right:10px;
+	}
+	aside a.menu-item.active .count{
+	  color:rgba(255,255,255,0.9);
+	}
+		
+		
+		
+		
+		
+		
+	
+	
+	
+    main{
+      flex:1;
+      padding:14px;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-width:0;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .title{
+      font-weight:750;
+      font-size:24px;
+      letter-spacing:0.2px;
+      margin:0;
+	  margin-bottom:18px;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:white;
+      padding:8px 10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn:hover{ background:var(--soft); }
+    .muted{ color:var(--muted); font-size:12px; }
+    select{
+      width:100%;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:white;
+      box-sizing:border-box;
+    }
+	
+    /* left menu */
+	
+	#audienceWrap{
+	  margin-bottom:16px;
+	}
+
+    #menu{
+      overflow:auto;
+      padding-right:4px;
+      border-top:none !important;
+      padding-top:10px;
+    }
+    a.menu-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:7px 0;
+      color:var(--link);
+      text-decoration:none;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      border-bottom:1px solid rgba(229,231,235,0.45);
+    }
+    a.menu-item:hover{ text-decoration:underline; }
+    .count{
+      color:var(--muted);
+      font-size:12px;
+      flex:0 0 auto;
+    }
+    .pill{
+      display:inline-block;
+      padding:2px 8px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:100%;
+    }
+
+    /* iframe wrapper + spinner */
+    #frameWrap{ position:relative; flex:1; min-height:0; }
+    #spinner{
+      position:absolute; inset:0;
+      display:none;
+      align-items:center; justify-content:center;
+      background:rgba(255,255,255,0.75);
+      backdrop-filter: blur(2px);
+      z-index:10;
+    }
+    #spinner .dot{
+      width:34px;height:34px;border:4px solid #ddd;border-top-color:var(--link);
+      border-radius:50%;
+      display:inline-block;
+      animation:spin 0.8s linear infinite;
+    }
+    #spinner .label{ margin-top:10px; color:var(--muted); font-size:13px; text-align:center; }
+    @keyframes spin{ to{ transform:rotate(360deg);} }
+
+    iframe{
+      width:100%;
+      height:100%;
+      border:none;
+    }
+	
+	#fixedTop{ margin-bottom:4px; }
+	#fixedBottom{ margin-top:6px; margin-bottom:12px;}
+
+	/* enlever les séparateurs (sinon ça double avec ceux des .menu-item) */
+	#fixedTop, #fixedBottom{
+	  border:0 !important;
+	  padding:0;
+	}
+	
+    /* status */
+    #status{ color:var(--muted); font-size:12px; }
+    .danger{ color:#b91c1c; }
+	
+	body.swal2-shown.swal2-height-auto {
+	height: 100vh !important;
+  padding-bottom: 0 !important;
+}
+
+.swal2-confirm {
+  background-color: #173F35 !important; /* bleu */
+  color: white !important;
+}
+
+.swal2-deny {
+  background-color: #EEA000 !important; /* rouge */
+  color: white !important;
+}
+
+.swal2-cancel {
+  background-color: #6b7280 !important; /* gris */
+  color: white !important;
+}
+/* SweetAlert2 : même police que le body */
+.swal2-container,
+.swal2-popup,
+.swal2-title,
+.swal2-html-container,
+.swal2-input,
+.swal2-textarea,
+.swal2-select,
+.swal2-validation-message,
+.swal2-confirm,
+.swal2-deny,
+.swal2-cancel {
+  font-family: inherit !important;
+}
+/* ============ MOBILE RESPONSIVE ============ */
+@media (max-width: 820px){
+  body{
+    display:block;          /* stop flex split */
+    height:100vh;
+    overflow:hidden;        /* prevent page scroll behind drawer */
+  }
+
+  /* main takes full screen */
+  main{
+    height:100vh;
+    padding:10px;
+  }
+
+  /* topbar becomes sticky so user always has access */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:var(--bg);
+    padding:10px 0;
+  }
+
+  /* Drawer behavior for the left panel */
+  aside{
+    position:fixed;
+    top:0;
+    left:0;
+    height:100vh;
+    width:min(86vw, 360px); /* use most of screen but not 80% hard; caps at 360 */
+    z-index:20;
+
+    transform:translateX(-105%);
+    transition:transform .22s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  }
+
+  body.menu-open aside{
+    transform:translateX(0);
+  }
+
+  /* Dark overlay behind the drawer */
+  #overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    z-index:15;
+    display:none;
+  }
+  body.menu-open #overlay{
+    display:block;
+  }
+
+  /* iframe area */
+  #frameWrap{
+    height: calc(100vh - 64px); /* approx topbar height */
+    min-height:0;
+  }
+}
+
+
+/* Par défaut (écran "grand") : pas besoin du bouton Menu */
+#btnMenu{ display:none; }
+
+/* En mode mobile (quand le panel devient un drawer) : on affiche le bouton */
+@media (max-width: 820px){
+  #btnMenu{ display:inline-block; }
+}
+
+  </style>
 </head>
 
 <body class="portal">
