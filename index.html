@@ -321,56 +321,69 @@ iframe {
   border-radius: 0 !important;
 }
 
-
 /* =========================================================
-   SweetAlert2 — refined / flat / compact
+   SweetAlert2 — micro-fixes (alignment + sizing + colors)
    ========================================================= */
 
+/* Popup: garde le look, mais centre bien le contenu */
 .swal2-popup {
-  border-radius: 0 !important;
-  padding: 18px 20px !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25) !important;
-  width: auto !important;
-  max-width: 420px !important;
+  text-align: left !important;              /* évite l’impression "bizarre" */
 }
 
-/* Title */
+/* Titre: vraiment noir + spacing propre */
 .swal2-title {
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  margin-bottom: 8px !important;
+  color: #111827 !important;                /* noir net (proche de ton --text) */
+  margin: 0 0 10px 0 !important;
+  line-height: 1.2 !important;
 }
 
-/* Text */
+/* Texte: mieux positionné, largeur cohérente */
 .swal2-html-container {
-  font-size: 13px !important;
-  line-height: 1.45 !important;
-  color: var(--text) !important;
   margin: 0 0 14px 0 !important;
+  padding: 0 !important;
+  color: #374151 !important;                /* gris lisible (plus raffiné) */
 }
 
-/* Input */
+/* Input: largeur adaptée + centrage */
 .swal2-input {
-  border-radius: 0 !important;
-  padding: 10px 10px !important;
-  font-size: 13px !important;
+  width: 100% !important;                   /* règle #1: pas un petit input */
+  max-width: 340px !important;              /* évite full largeur “trop large” */
+  margin: 0 auto 14px auto !important;      /* centré + spacing sous l'input */
+  box-sizing: border-box !important;
+
+  height: 40px !important;                  /* hauteur cohérente */
+  line-height: 40px !important;             /* stabilise l’alignement vertical */
 }
 
-/* Buttons container */
+/* Container boutons: centre + évite les décalages */
 .swal2-actions {
-  margin-top: 12px !important;
-  gap: 8px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;           /* règle #2 */
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-/* Buttons */
+/* Boutons: même hauteur, même baseline, rendu plus “net” */
 .swal2-confirm,
 .swal2-deny,
 .swal2-cancel {
-  border-radius: 0 !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  padding: 8px 14px !important;
-  min-height: auto !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  padding: 0 14px !important;              /* au lieu de padding vertical */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-shadow: none !important;              /* moins “gros” */
+  letter-spacing: 0 !important;
+}
+
+/* Optionnel: rendre le fond overlay un peu plus “soft” */
+.swal2-backdrop-show {
+  background: rgba(0,0,0,0.35) !important;
 }
 
   </style>
