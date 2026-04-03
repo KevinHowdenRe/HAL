@@ -603,7 +603,7 @@ function openSectionHub(section) {
   const title = escapeHtml(p.title || p.id);
   const pidEnc = encodeURIComponent(p.id);
   const secEnc = encodeURIComponent(section);
-  const path = `/${SITE_ID}/${section}/${p.id}`;
+  const path = escapeHtml(p.description);//`/${SITE_ID}/${section}/${p.id}`;
   const img = thumbUrl(section, p.id);
 
   return `
