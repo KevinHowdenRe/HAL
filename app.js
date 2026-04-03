@@ -268,18 +268,19 @@ async function loginSweet() {
   }
 
   // 1) Ask email + choose mode
-  const first = await Swal.fire({
-	heightAuto: false,
-    title: "Connexion",
-    html: `
-      <div style="text-align:left; font-size:13px; margin-bottom:8px;">
-        <p><b>Lien d'accès</b>: Pour obtenir un lien à usage unique temporaire.</p>.</p>
-		<p><b>Compte</b> Pour une gestion de compte standard.
-      </div>
-	  <br>
-	  <br>
-      <input id="swal-email" class="swal2-input" placeholder="email@domain.com" autocomplete="username" />
-    `,
+  
+const first = await Swal.fire({
+  heightAuto: false,
+  title: "Connexion",
+  html: `
+    <div class="swal-help">
+      <p><b>Lien d'accès</b> : Obtenir un lien à usage unique temporaire.</p>
+      <p><b>Compte</b> : Se connecter avec mot de passe (gestion standard).</p>
+    </div>
+    <input id="swal-email" class="swal2-input" placeholder="email@domain.com"
+           autocomplete="username" />
+  `,
+
     focusConfirm: false,
     showCancelButton: true,
     cancelButtonText: "Cancel",
@@ -331,14 +332,18 @@ async function loginSweet() {
 
   // 2B) Manage (password login)
   if (first.isDenied) {
-    const second = await Swal.fire({
-      title: "Manage (password)",
-      html: `
-        <div style="text-align:left; font-size:13px;  margin-bottom:8px;">
-          <div style="margin-top:4px; font-weight:700; ">${escapeHtml(email)}</div>
-        </div>
-        <input id="swal-pass" type="password" class="swal2-input" placeholder="Mot de passe" autocomplete="current-password" />
-      `,
+   
+	const second = await Swal.fire({
+	  heightAuto: false,
+	  title: "Mot de passe",
+	  html: `
+		<div class="swal-help">
+		  <div class="swal-email">${escapeHtml(email)}</div>
+		</div>
+		<input id="swal-pass" type="password" class="swal2-input"
+			   placeholder="Mot de passe" autocomplete="current-password" />
+	  `,
+
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Login",
@@ -616,7 +621,7 @@ function openSectionHub(section) {
   const title = escapeHtml(p.title || p.id);
   const pidEnc = encodeURIComponent(p.id);
   const secEnc = encodeURIComponent(section);
-  const path = escapeHtml(p.description);//`/${SITE_ID}/${section}/${p.id}`;
+  const path = p.description;//`/${SITE_ID}/${section}/${p.id}`;
   const img = thumbUrl(section, p.id);
 
   return `
@@ -625,7 +630,7 @@ function openSectionHub(section) {
 
   <div class="card-content">
     <div class="card-title">${title}</div>
-    <div class="card-sub">${escapeHtml(path)}</div>
+    <div class="card-sub">${path}</div>
   </div>
 </div>
   `;

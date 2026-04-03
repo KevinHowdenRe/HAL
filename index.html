@@ -373,15 +373,22 @@ iframe {
   border-radius: 0 !important;
   height: 36px !important;
   line-height: 36px !important;
-  padding: 0 14px !important;              /* au lieu de padding vertical */
+  padding: 0 14px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+
   font-size: 13px !important;
   font-weight: 700 !important;
-  box-shadow: none !important;              /* moins “gros” */
   letter-spacing: 0 !important;
+  box-shadow: none !important;
+
+  border: none !important;       /* ✅ évite une différence de hauteur entre boutons */
+  margin: 0 !important;          /* ✅ évite micro décalages selon thèmes */
 }
+
+
+
 
 
 
