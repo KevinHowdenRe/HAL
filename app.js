@@ -86,6 +86,17 @@ h2, h3, h4, h5, h6 {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+/* Cards / panels */
+.card,
+.cards,
+.panel,
+.box {
+  border-radius: 0 !important;
+}
+
+
 `;
 
 
