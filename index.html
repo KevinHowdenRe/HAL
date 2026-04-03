@@ -322,54 +322,82 @@ iframe {
 }
 
 /* =========================================================
-   SweetAlert2 — micro-fixes (alignment + sizing + colors)
+   SweetAlert2 — site-like / crisp / left-aligned / flat
+   (ajouter en FIN du CSS)
    ========================================================= */
 
-/* Popup: garde le look, mais centre bien le contenu */
-.swal2-popup {
-  text-align: left !important;              /* évite l’impression "bizarre" */
+/* Popup globale */
+.swal2-popup{
+  border-radius: 0 !important;
+  padding: 18px 22px !important;          /* plus de marge à gauche => 2e ligne ne colle plus */
+  max-width: 440px !important;
+  box-shadow: 0 12px 34px rgba(0,0,0,.22) !important;
 }
 
-/* Titre: vraiment noir + spacing propre */
-.swal2-title {
-  color: #111827 !important;                /* noir net (proche de ton --text) */
+/* Titre : vrai noir, plus net */
+.swal2-title{
+  color: var(--text) !important;           /* #111827 ou ton var du site */
+  font-size: 22px !important;
+  font-weight: 750 !important;
+  letter-spacing: -0.01em !important;
   margin: 0 0 10px 0 !important;
-  line-height: 1.2 !important;
+  text-align: left !important;
 }
 
-/* Texte: mieux positionné, largeur cohérente */
-.swal2-html-container {
-  margin: 0 0 14px 0 !important;
-  padding: 0 !important;
-  color: #374151 !important;                /* gris lisible (plus raffiné) */
+/* Texte : aligné gauche + mieux "calé" */
+.swal2-html-container,
+.swal2-content{
+  text-align: left !important;
+  color: var(--text) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;                  /* enlève padding interne qui donne l’effet “décalé” */
+  font-weight: 500 !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Input: largeur adaptée + centrage */
-.swal2-input {
-  width: 100% !important;                   /* règle #1: pas un petit input */
-  max-width: 340px !important;              /* évite full largeur “trop large” */
-  margin: 0 auto 14px auto !important;      /* centré + spacing sous l'input */
-  box-sizing: border-box !important;
-
-  height: 40px !important;                  /* hauteur cohérente */
-  line-height: 40px !important;             /* stabilise l’alignement vertical */
+/* Petites lignes <p> : pas collées au bord */
+.swal2-html-container p{
+  margin: 0 0 6px 0 !important;
 }
 
-/* Container boutons: centre + évite les décalages */
-.swal2-actions {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;           /* règle #2 */
-  flex-wrap: wrap !important;
+/* Input : contours moins "gros", focus plus fin */
+.swal2-input{
+  width: 100% !important;
+  max-width: 360px !important;
+  margin: 6px 0 14px 0 !important;        /* aligné gauche (pas auto center) */
+  border-radius: 0 !important;
+
+  height: 38px !important;
+  padding: 8px 10px !important;
+  font-size: 13px !important;
+
+  border: 1px solid rgba(15,23,42,.18) !important;   /* plus fin que le bleu épais */
+  box-shadow: none !important;
+}
+
+/* Focus : plus raffiné (pas un gros halo bleu) */
+.swal2-input:focus{
+  border-color: rgba(33,141,128,.55) !important;
+  box-shadow: 0 0 0 2px rgba(33,141,128,.12) !important;
+}
+
+/* Zone boutons : alignement propre */
+.swal2-actions{
+  display:flex !important;
+  justify-content:flex-start !important;  /* aligné gauche */
+  align-items:center !important;
   gap: 10px !important;
   margin: 0 !important;
   padding: 0 !important;
 }
 
-/* Boutons: même hauteur, même baseline, rendu plus “net” */
+/* Boutons : ceux que tu as déjà (ok), mais on garde "site-like" */
 .swal2-confirm,
 .swal2-deny,
-.swal2-cancel {
+.swal2-cancel{
   border-radius: 0 !important;
   height: 36px !important;
   line-height: 36px !important;
@@ -377,29 +405,30 @@ iframe {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-
   font-size: 13px !important;
   font-weight: 700 !important;
-  letter-spacing: 0 !important;
   box-shadow: none !important;
-
-  border: none !important;       /* ✅ évite une différence de hauteur entre boutons */
-  margin: 0 !important;          /* ✅ évite micro décalages selon thèmes */
+  letter-spacing: 0 !important;
+  border: none !important;
+  margin: 0 !important;
 }
 
-
-
-
-
-
-
-
-
-/* Optionnel: rendre le fond overlay un peu plus “soft” */
-.swal2-backdrop-show {
-  background: rgba(0,0,0,0.35) !important;
+/* Icône success : un peu plus discrète (optionnel) */
+.swal2-icon{
+  transform: scale(.92);
 }
 
+/* Backdrop un peu moins lourd */
+.swal2-backdrop-show{
+  background: rgba(0,0,0,.32) !important;
+}
+
+.swal-email{
+  margin: 0 0 10px 0 !important;  /* ✅ éloigne l’email de l’input */
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  font-size: 13px !important;
+}
   </style>
 </head>
 

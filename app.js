@@ -273,13 +273,14 @@ const first = await Swal.fire({
   heightAuto: false,
   title: "Connexion",
   html: `
-    <div class="swal-help">
-      <p><b>Lien d'accès</b> : Obtenir un lien à usage unique temporaire.</p>
-      <p><b>Compte</b> : Se connecter avec mot de passe (gestion standard).</p>
-    </div>
-    <input id="swal-email" class="swal2-input" placeholder="email@domain.com"
-           autocomplete="username" />
-  `,
+  <div class="swal-help">
+    <p><b>Lien d'accès</b> : Obtenir un lien à usage unique temporaire.</p>
+    <p><b>Compte</b> : Se connecter avec mot de passe (gestion standard).</p>
+  </div>
+  <input id="swal-email" class="swal2-input" placeholder="email@domain.com"
+         autocomplete="username" />
+`,
+
 
     focusConfirm: false,
     showCancelButton: true,
@@ -317,11 +318,17 @@ const first = await Swal.fire({
         method: "POST",
         body: { email, site_id: SITE_ID }
       });
-      await Swal.fire({
-        icon: "success",
-        title: "Check your email",
-        text: "If authorized, you will receive a link (or multiple links) to sign in."
-      });
+     await Swal.fire({
+	  icon: "success",
+	  title: "Verifiez vos mails",
+	  text: "Si autorisé, vous recevrez un lien pour vous authentifier.",
+	  showConfirmButton: false,
+	  showCancelButton: false,
+	  showDenyButton: false,
+	  timer: 1800,
+	  timerProgressBar: true
+	});
+
       setStatus("✅ Request access sent (if authorized).");
     } catch (e) {
       await Swal.fire({ icon: "error", title: "Request failed", text: e.message });
@@ -336,13 +343,14 @@ const first = await Swal.fire({
 	const second = await Swal.fire({
 	  heightAuto: false,
 	  title: "Mot de passe",
-	  html: `
-		<div class="swal-help">
-		  <div class="swal-email">${escapeHtml(email)}</div>
-		</div>
-		<input id="swal-pass" type="password" class="swal2-input"
-			   placeholder="Mot de passe" autocomplete="current-password" />
-	  `,
+		 html: `
+	  <div class="swal-help">
+		<div class="swal-email">${escapeHtml(email)}</div>
+	  </div>
+	  <input id="swal-pass" type="password" class="swal2-input"
+			 placeholder="Mot de passe" autocomplete="current-password" />
+	`,
+
 
       focusConfirm: false,
       showCancelButton: true,
