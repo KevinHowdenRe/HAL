@@ -305,7 +305,7 @@ async function loginSweet() {
       heightAuto: false,
       title: "Access code",
       html: `
-        <p>Choisissez une option :</p>
+        <p>Select your option :</p>
       `,
       showCancelButton: true,
       cancelButtonText: "Cancel",
@@ -330,7 +330,7 @@ async function loginSweet() {
         preConfirm: () => {
           const email = document.getElementById("swal-email").value.trim();
           if (!email) {
-            Swal.showValidationMessage("Email requis");
+            Swal.showValidationMessage("Email required");
             return false;
           }
           return { email };
@@ -357,7 +357,7 @@ async function loginSweet() {
       } catch (e) {
         await Swal.fire({
           icon: "error",
-          title: "Envoi impossible",
+          title: "Error",
           text: e.message
         });
         setStatus("Request access error: " + e.message, true);
