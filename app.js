@@ -263,95 +263,181 @@ async function apiFetch(path, { method="GET", headers={}, body=null } = {}) {
 
 async function loginSweet() {
   if (typeof Swal === "undefined") {
-    setStatus("SweetAlert2 not loaded. Add the CDN script in <head>.", true);
+    setStatus("SweetAlert2 not loaded. Add the CDN script in .", true);
     return;
   }
 
-  // 1) Ask email + choose mode
-  
-const first = await Swal.fire({
-  heightAuto: false,
-  title: "Connexion",
-  html: `
-  <div class="swal-help">
-    <p><b>Lien d'accès</b> : Obtenir un lien à usage unique temporaire.</p>
-    <p><b>Compte</b> : Se connecter avec mot de passe (gestion standard).</p>
-  </div>
-  <input id="swal-email" class="swal2-input" placeholder="email@domain.com"
-         autocomplete="username" />
-`,
-
-
-    focusConfirm: false,
+  // 1) Choix principal : Code d'accès ou Compte
+  const first = await Swal.fire({
+    heightAuto: false,
+    title: "Connexion",
+    html: `
+      <p><b>Code d’accès</b> : recevoir un code temporaire par email ou saisir un code déjà reçu.</p>
+      <p><b>Compte</b> : se connecter avec mot de passe.</p>
+    `,
     showCancelButton: true,
     cancelButtonText: "Cancel",
     showDenyButton: true,
-    confirmButtonText: "Lien d'accès",
-    denyButtonText: "Compte",
-    preConfirm: () => {
-      const email = document.getElementById("swal-email").value.trim();
-      if (!email) {
-        Swal.showValidationMessage("Email requis");
-        return false;
-      }
-      return { email };
-    }
+    confirmButtonText: "Code d’accès",
+    denyButtonText: "Compte"
   });
 
   if (first.isDismissed) return;
 
-  // Email is validated only when "confirm" (Request access) is clicked.
-  // For "Manage" we need to also validate email (so we read it here safely).
-  const emailInput = document.getElementById("swal-email");
-  const email = (first.value && first.value.email) || (emailInput ? emailInput.value.trim() : "");
-
-  if (!email) {
-    // Happens if user clicked "Manage" without preConfirm validation
-    await Swal.fire({ icon: "warning", title: "Missing email", text: "Please enter an email." });
-    return;
-  }
-
-  // 2A) Request access (magic link email)
+  // 2A) Branche "Code d'accès"
   if (first.isConfirmed) {
-    try {
-      await apiFetch("/api/auth/request-link", {
-        method: "POST",
-        body: { email, site_id: SITE_ID }
-      });
-     await Swal.fire({
-	  icon: "success",
-	  title: "Verifiez vos mails",
-	  text: "Si autorisé, vous recevrez un lien pour vous authentifier.",
-	  showConfirmButton: false,
-	  showCancelButton: false,
-	  showDenyButton: false,
-	  timer: 1800,
-	  timerProgressBar: true
-	});
+    const mode = await Swal.fire({
+      heightAuto: false,
+      title: "Code d’accès",
+      html: `
+        <p>Choisissez une option :</p>
+      `,
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+      showDenyButton: true,
+      confirmButtonText: "Recevoir un code",
+      denyButtonText: "J’ai déjà un code"
+    });
 
-      setStatus("✅ Request access sent (if authorized).");
-    } catch (e) {
-      await Swal.fire({ icon: "error", title: "Request failed", text: e.message });
-      setStatus("Request access error: " + e.message, true);
+    if (mode.isDismissed) return;
+
+    // 2A-1) Recevoir un code
+    if (mode.isConfirmed) {
+      const askEmail = await Swal.fire({
+        heightAuto: false,
+        title: "Recevoir un code",
+        html: `
+          <input id="swal-email" class="swal2-input" type="email" placeholder="Email">
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: "Envoyer",
+        preConfirm: () => {
+          const email = document.getElementById("swal-email").value.trim();
+          if (!email) {
+            Swal.showValidationMessage("Email requis");
+            return false;
+          }
+          return { email };
+        }
+      });
+
+      if (askEmail.isDismissed) return;
+
+      try {
+        await apiFetch("/api/auth/request-link", {
+          method: "POST",
+          body: { email: askEmail.value.email, site_id: SITE_ID }
+        });
+
+        await Swal.fire({
+          icon: "success",
+          title: "Code envoyé",
+          text: "Si autorisé, vous recevrez un code temporaire par email.",
+          timer: 1800,
+          showConfirmButton: false
+        });
+
+        setStatus("✅ Code d’accès envoyé (si autorisé).");
+      } catch (e) {
+        await Swal.fire({
+          icon: "error",
+          title: "Envoi impossible",
+          text: e.message
+        });
+        setStatus("Request access error: " + e.message, true);
+      }
+      return;
     }
-    return;
+
+    // 2A-2) J'ai déjà un code
+    if (mode.isDenied) {
+      const askCode = await Swal.fire({
+        heightAuto: false,
+        title: "Entrer votre code",
+        html: `
+          <input id="swal-code" class="swal2-input" type="text" placeholder="Code d’accès">
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: "Connexion",
+        preConfirm: () => {
+          const code = document.getElementById("swal-code").value.trim();
+          if (!code) {
+            Swal.showValidationMessage("Code requis");
+            return false;
+          }
+          return { code };
+        }
+      });
+
+      if (askCode.isDismissed) return;
+
+      try {
+        const d = await apiFetch("/api/auth/consume-link", {
+          method: "POST",
+          body: { token: askCode.value.code }
+        });
+
+        if (!d.ok || !d.token) throw new Error(d.error || "consume_failed");
+
+        token = d.token;
+        localStorage.setItem("hal_token", token);
+        setAuthButton();
+
+        await loadMemberships();
+        await onAudienceChange(true);
+
+        setStatus("✅ Logged in (code).");
+        await Swal.fire({
+          icon: "success",
+          title: "Connecté",
+          timer: 900,
+          showConfirmButton: false
+        });
+      } catch (e) {
+        await Swal.fire({
+          icon: "error",
+          title: "Code invalide",
+          text: e.message
+        });
+        setStatus("Code access error: " + e.message, true);
+      }
+      return;
+    }
   }
 
-  // 2B) Manage (password login)
+  // 2B) Branche "Compte" inchangée
   if (first.isDenied) {
-   
-	const second = await Swal.fire({
-	  heightAuto: false,
-	  title: "Mot de passe",
-		 html: `
-	  <div class="swal-help">
-		<div class="swal-email">${escapeHtml(email)}</div>
-	  </div>
-	  <input id="swal-pass" type="password" class="swal2-input"
-			 placeholder="Mot de passe" autocomplete="current-password" />
-	`,
+    const askEmail = await Swal.fire({
+      heightAuto: false,
+      title: "Connexion compte",
+      html: `
+        <input id="swal-email" class="swal2-input" type="email" placeholder="Email">
+      `,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Suivant",
+      preConfirm: () => {
+        const email = document.getElementById("swal-email").value.trim();
+        if (!email) {
+          Swal.showValidationMessage("Email requis");
+          return false;
+        }
+        return { email };
+      }
+    });
 
+    if (askEmail.isDismissed) return;
+    const email = askEmail.value.email;
 
+    const second = await Swal.fire({
+      heightAuto: false,
+      title: "Mot de passe",
+      html: `
+        <div class="swal-email">${escapeHtml(email)}</div>
+        <input id="swal-pass" class="swal2-input" type="password" placeholder="Password">
+      `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Login",
@@ -379,19 +465,26 @@ const first = await Swal.fire({
       localStorage.setItem("hal_token", token);
       setAuthButton();
 
-      // Your usual post-login flow
       await loadMemberships();
       await onAudienceChange(true);
 
       setStatus("✅ Logged in (manage).");
-      await Swal.fire({ icon: "success", title: "Logged in", timer: 900, showConfirmButton: false });
+      await Swal.fire({
+        icon: "success",
+        title: "Logged in",
+        timer: 900,
+        showConfirmButton: false
+      });
     } catch (e) {
-      await Swal.fire({ icon: "error", title: "Login failed", text: e.message });
+      await Swal.fire({
+        icon: "error",
+        title: "Login failed",
+        text: e.message
+      });
       setStatus("Login error: " + e.message, true);
     }
   }
 }
-
 
 async function loginPopup() {
   const email = window.prompt("Email:");
