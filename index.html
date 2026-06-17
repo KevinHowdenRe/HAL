@@ -237,22 +237,21 @@ iframe{
 .danger{ color:#b91c1c; }
 
 /* =========================================================
-   SWEETALERT2 (site-like + flat + no ghost buttons)
+   SWEETALERT2 (clean + flat + aligned)
    ========================================================= */
 
+/* Base fix */
 body.swal2-shown.swal2-height-auto{
   height:100vh !important;
   padding-bottom:0 !important;
 }
 
-/* même police que le site */
+/* Typography inherit */
 .swal2-container,
 .swal2-popup,
 .swal2-title,
 .swal2-html-container,
 .swal2-input,
-.swal2-textarea,
-.swal2-select,
 .swal2-validation-message,
 .swal2-confirm,
 .swal2-deny,
@@ -260,125 +259,111 @@ body.swal2-shown.swal2-height-auto{
   font-family: inherit !important;
 }
 
-/* popup */
+/* Popup */
 .swal2-popup{
   border-radius:0 !important;
-  padding:18px 22px !important;
+  padding:20px 24px !important;
   max-width:440px !important;
   box-shadow:0 12px 34px rgba(0,0,0,.22) !important;
-  text-align:left !important; /* rend tout cohérent */
+  text-align:left !important;
 }
 
-/* title */
+/* Title */
 .swal2-title{
   color:var(--text) !important;
   font-size:22px !important;
   font-weight:750 !important;
-  letter-spacing:-0.01em !important;
-  margin:0 0 10px 0 !important;
+  margin:0 0 12px 0 !important;
   text-align:left !important;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* text */
+/* Content */
 .swal2-html-container{
-  text-align:left !important;
   color:var(--text) !important;
   font-size:13px !important;
   line-height:1.5 !important;
-  
-  margin: 0 !important;
-  padding: 0 !important
-
   font-weight:500 !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  max-width:360px; /* clé pour alignement */
 }
+
+/* Clean blocks (évite <p> dégueu) */
 .swal2-html-container p{
-  
-  margin: 0 0 8px 0 !important;
-  line-height: 1.45 !important;
-
+  margin:0 0 8px 0 !important;
+  line-height:1.45 !important;
 }
-
 
 .swal2-html-container b{
-  font-weight: 700;
+  font-weight:700;
 }
 
-
-/* input */
+/* Input */
 .swal2-input{
   width:100% !important;
   max-width:360px !important;
-  margin:6px 0 14px 0 !important; /* aligné gauche */
-  border-radius:0 !important;
+  margin:8px 0 14px 0 !important;
 
   height:38px !important;
   padding:8px 10px !important;
   font-size:13px !important;
 
+  border-radius:0 !important;
   border:1px solid rgba(15,23,42,.18) !important;
   box-shadow:none !important;
 }
+
 .swal2-input:focus{
   border-color: rgba(33,141,128,.55) !important;
   box-shadow: 0 0 0 2px rgba(33,141,128,.12) !important;
 }
 
-/* boutons couleur */
-.swal2-confirm{ background-color: var(--sidebar) !important; color:#fff !important; }
-.swal2-deny{    background-color: #EEA000 !important;      color:#fff !important; }
-.swal2-cancel{  background-color: #6b7280 !important;      color:#fff !important; }
+/* Buttons colors */
+.swal2-confirm{ background:var(--sidebar) !important; color:#fff !important; }
+.swal2-deny{ background:#EEA000 !important; color:#fff !important; }
+.swal2-cancel{ background:#6b7280 !important; color:#fff !important; }
 
-/* boutons style (IMPORTANT: on ne force PAS display en !important) */
+/* Buttons style */
 .swal2-confirm,
 .swal2-deny,
 .swal2-cancel{
-  border-radius:0 !important;
   height:36px !important;
-  line-height:36px !important;
   padding:0 14px !important;
   font-size:13px !important;
   font-weight:700 !important;
+
   border:none !important;
-  margin:0 !important;
+  border-radius:0 !important;
   box-shadow:none !important;
-  letter-spacing:0 !important;
+
+  min-width:120px; /* ✅ uniformité */
 }
 
-/* actions: on garde l'alignement mais sans !important sur display
-   => SweetAlert peut cacher la zone quand showConfirmButton:false */
+/* Actions layout (clé pour alignement) */
 .swal2-actions{
   display:flex;
   justify-content:flex-start;
-  align-items:center;
   gap:10px;
-  margin:0;
+
+  width:100%;
+  margin-top:12px;
   padding:0;
 }
 
-/* Respecter display:none inline sur les boutons (anti "ghost buttons") */
+/* Hide ghost buttons */
 .swal2-confirm[style*="display: none"],
 .swal2-deny[style*="display: none"],
 .swal2-cancel[style*="display: none"]{
   display:none !important;
 }
 
-/* Email ligne (si utilisée dans ton HTML) */
-.swal-email{
-  margin:0 0 10px 0 !important;
-  font-weight:700 !important;
-  color:var(--text) !important;
-  font-size:13px !important;
-}
-
-/* backdrop */
+/* Backdrop */
 .swal2-backdrop-show{
   background:rgba(0,0,0,.32) !important;
 }
-
 /* =========================================================
    MOBILE RESPONSIVE
    ========================================================= */

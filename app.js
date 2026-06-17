@@ -270,25 +270,31 @@ async function loginSweet() {
   // 1) Choix principal : Code d'accès ou Compte
   const first = await Swal.fire({
     heightAuto: false,
-    title: "Connexion",
+    title: "Sign in",
     html: `
-      <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="text-align:left; display:flex; flex-direction:column; gap:14px;">
+
   <div>
-    <b>Access code</b><br>
-    Receive a temporary code by email or enter an existing one.
+    <div style="font-weight:700; margin-bottom:2px;">Access code</div>
+    <div style="font-size:13px; color:#4b5563;">
+      Receive a temporary code by email or enter one you already received.
+    </div>
   </div>
 
   <div>
-    <b>Account</b><br>
-    Sign in using your password.
+    <div style="font-weight:700; margin-bottom:2px;">Account</div>
+    <div style="font-size:13px; color:#4b5563;">
+      Sign in using your password.
+    </div>
   </div>
+
 </div>
     `,
     showCancelButton: true,
     cancelButtonText: "Cancel",
     showDenyButton: true,
-    confirmButtonText: "Code d’accès",
-    denyButtonText: "Compte"
+    confirmButtonText: "Access Code",
+    denyButtonText: "Account"
   });
 
   if (first.isDismissed) return;
@@ -297,15 +303,15 @@ async function loginSweet() {
   if (first.isConfirmed) {
     const mode = await Swal.fire({
       heightAuto: false,
-      title: "Code d’accès",
+      title: "Access code",
       html: `
         <p>Choisissez une option :</p>
       `,
       showCancelButton: true,
       cancelButtonText: "Cancel",
       showDenyButton: true,
-      confirmButtonText: "Recevoir un code",
-      denyButtonText: "J’ai déjà un code"
+      confirmButtonText: "Get a code",
+      denyButtonText: "Enter a code "
     });
 
     if (mode.isDismissed) return;
@@ -314,13 +320,13 @@ async function loginSweet() {
     if (mode.isConfirmed) {
       const askEmail = await Swal.fire({
         heightAuto: false,
-        title: "Recevoir un code",
+        title: "Get a code",
         html: `
           <input id="swal-email" class="swal2-input" type="email" placeholder="Email">
         `,
         focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: "Envoyer",
+        confirmButtonText: "Send",
         preConfirm: () => {
           const email = document.getElementById("swal-email").value.trim();
           if (!email) {
@@ -341,13 +347,13 @@ async function loginSweet() {
 
         await Swal.fire({
           icon: "success",
-          title: "Code envoyé",
-          text: "Si autorisé, vous recevrez un code temporaire par email.",
+          title: "Code sent",
+          text: "Check your email. You will receive a temporary code if authorized.",
           timer: 1800,
           showConfirmButton: false
         });
 
-        setStatus("✅ Code d’accès envoyé (si autorisé).");
+        setStatus("✅ Code sent (if authorized).");
       } catch (e) {
         await Swal.fire({
           icon: "error",
@@ -363,17 +369,17 @@ async function loginSweet() {
     if (mode.isDenied) {
       const askCode = await Swal.fire({
         heightAuto: false,
-        title: "Entrer votre code",
+        title: "Enter your code",
         html: `
           <input id="swal-code" class="swal2-input" type="text" placeholder="Code d’accès">
         `,
         focusConfirm: false,
         showCancelButton: true,
-        confirmButtonText: "Connexion",
+        confirmButtonText: "Login",
         preConfirm: () => {
           const code = document.getElementById("swal-code").value.trim();
           if (!code) {
-            Swal.showValidationMessage("Code requis");
+            Swal.showValidationMessage("Code required");
             return false;
           }
           return { code };
@@ -420,7 +426,7 @@ async function loginSweet() {
   if (first.isDenied) {
     const askEmail = await Swal.fire({
       heightAuto: false,
-      title: "Connexion compte",
+      title: "Account login",
       html: `
         <input id="swal-email" class="swal2-input" type="email" placeholder="Email">
       `,
@@ -430,7 +436,7 @@ async function loginSweet() {
       preConfirm: () => {
         const email = document.getElementById("swal-email").value.trim();
         if (!email) {
-          Swal.showValidationMessage("Email requis");
+          Swal.showValidationMessage("Email required");
           return false;
         }
         return { email };
@@ -442,7 +448,7 @@ async function loginSweet() {
 
     const second = await Swal.fire({
       heightAuto: false,
-      title: "Mot de passe",
+      title: "Password",
       html: `
         <div class="swal-email">${escapeHtml(email)}</div>
         <input id="swal-pass" class="swal2-input" type="password" placeholder="Password">
