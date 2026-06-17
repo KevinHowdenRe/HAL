@@ -235,18 +235,20 @@ iframe{
 
 #status{ color:var(--muted); font-size:12px; }
 .danger{ color:#b91c1c; }
-
 /* =========================================================
-   SWEETALERT2 (clean + flat + aligned)
+   SWEETALERT2 (site-like + flat + properly aligned)
    ========================================================= */
 
-/* Base fix */
+:root{
+  --swal-content-width: 380px;
+}
+
 body.swal2-shown.swal2-height-auto{
   height:100vh !important;
   padding-bottom:0 !important;
 }
 
-/* Typography inherit */
+/* Typography */
 .swal2-container,
 .swal2-popup,
 .swal2-title,
@@ -261,11 +263,24 @@ body.swal2-shown.swal2-height-auto{
 
 /* Popup */
 .swal2-popup{
+  box-sizing:border-box !important;
   border-radius:0 !important;
-  padding:20px 24px !important;
-  max-width:440px !important;
+  width:min(92vw, 480px) !important;
+  max-width:480px !important;
+  padding:22px 22px 18px 22px !important;
   box-shadow:0 12px 34px rgba(0,0,0,.22) !important;
   text-align:left !important;
+}
+
+/* Force left layout on all blocks */
+.swal2-title,
+.swal2-html-container,
+.swal2-input,
+.swal2-actions{
+  width:100% !important;
+  max-width:var(--swal-content-width) !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
 }
 
 /* Title */
@@ -273,84 +288,102 @@ body.swal2-shown.swal2-height-auto{
   color:var(--text) !important;
   font-size:22px !important;
   font-weight:750 !important;
-  margin:0 0 12px 0 !important;
+  line-height:1.2 !important;
   text-align:left !important;
-  -webkit-font-smoothing: antialiased;
+  margin:0 0 14px 0 !important;
+  padding:0 !important;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* Content */
+/* Text */
 .swal2-html-container{
   color:var(--text) !important;
   font-size:13px !important;
   line-height:1.5 !important;
   font-weight:500 !important;
-
-  margin:0 !important;
+  text-align:left !important;
+  margin:0 0 14px 0 !important;
   padding:0 !important;
-
-  max-width:360px; /* clé pour alignement */
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* Clean blocks (évite <p> dégueu) */
 .swal2-html-container p{
-  margin:0 0 8px 0 !important;
+  margin:0 0 10px 0 !important;
   line-height:1.45 !important;
 }
 
+.swal2-html-container p:last-child{
+  margin-bottom:0 !important;
+}
+
 .swal2-html-container b{
-  font-weight:700;
+  font-weight:700 !important;
 }
 
 /* Input */
 .swal2-input{
+  box-sizing:border-box !important;
+  display:block !important;
   width:100% !important;
-  max-width:360px !important;
-  margin:8px 0 14px 0 !important;
-
   height:38px !important;
+  margin:8px 0 14px 0 !important;
   padding:8px 10px !important;
   font-size:13px !important;
-
   border-radius:0 !important;
   border:1px solid rgba(15,23,42,.18) !important;
   box-shadow:none !important;
 }
 
 .swal2-input:focus{
-  border-color: rgba(33,141,128,.55) !important;
-  box-shadow: 0 0 0 2px rgba(33,141,128,.12) !important;
+  border-color:rgba(33,141,128,.55) !important;
+  box-shadow:0 0 0 2px rgba(33,141,128,.12) !important;
 }
 
 /* Buttons colors */
-.swal2-confirm{ background:var(--sidebar) !important; color:#fff !important; }
-.swal2-deny{ background:#EEA000 !important; color:#fff !important; }
-.swal2-cancel{ background:#6b7280 !important; color:#fff !important; }
+.swal2-confirm{
+  background:var(--sidebar) !important;
+  color:#fff !important;
+}
+
+.swal2-deny{
+  background:#EEA000 !important;
+  color:#fff !important;
+}
+
+.swal2-cancel{
+  background:#6b7280 !important;
+  color:#fff !important;
+}
 
 /* Buttons style */
 .swal2-confirm,
 .swal2-deny,
 .swal2-cancel{
+  box-sizing:border-box !important;
   height:36px !important;
+  min-width:110px !important;
   padding:0 14px !important;
-  font-size:13px !important;
-  font-weight:700 !important;
-
   border:none !important;
   border-radius:0 !important;
   box-shadow:none !important;
-
-  min-width:120px; /* ✅ uniformité */
+  font-size:13px !important;
+  font-weight:700 !important;
+  line-height:36px !important;
+  margin:0 !important;
+  white-space:nowrap !important;
 }
 
-/* Actions layout (clé pour alignement) */
+/* Actions */
 .swal2-actions{
-  display:flex;
-  justify-content:flex-start;
-  gap:10px;
-
-  width:100%;
-  margin-top:12px;
-  padding:0;
+  display:flex !important;
+  flex-wrap:nowrap !important;      /* empêche Cancel de passer dessous */
+  justify-content:flex-start !important;
+  align-items:center !important;
+  gap:10px !important;
+  margin:14px 0 0 0 !important;
+  padding:0 !important;
 }
 
 /* Hide ghost buttons */
@@ -358,6 +391,14 @@ body.swal2-shown.swal2-height-auto{
 .swal2-deny[style*="display: none"],
 .swal2-cancel[style*="display: none"]{
   display:none !important;
+}
+
+/* Optional helper line (email / selected account) */
+.swal-email{
+  margin:0 0 10px 0 !important;
+  font-weight:700 !important;
+  color:var(--text) !important;
+  font-size:13px !important;
 }
 
 /* Backdrop */
