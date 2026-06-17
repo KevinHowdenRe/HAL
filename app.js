@@ -272,8 +272,17 @@ async function loginSweet() {
     heightAuto: false,
     title: "Connexion",
     html: `
-      <p><b>Code d’accès</b> : recevoir un code temporaire par email ou saisir un code déjà reçu.</p>
-      <p><b>Compte</b> : se connecter avec mot de passe.</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+  <div>
+    <b>Access code</b><br>
+    Receive a temporary code by email or enter an existing one.
+  </div>
+
+  <div>
+    <b>Account</b><br>
+    Sign in using your password.
+  </div>
+</div>
     `,
     showCancelButton: true,
     cancelButtonText: "Cancel",
