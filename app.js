@@ -277,7 +277,7 @@ async function loginSweet() {
   <div>
     <div style="font-weight:700; margin-bottom:2px;">Access code</div>
     <div style="font-size:13px; color:#4b5563;">
-      Receive a temporary code by email or enter one you already received.
+      Get a temporary code by email or enter a valide one.
     </div>
   </div>
 
@@ -432,7 +432,7 @@ async function loginSweet() {
       `,
       focusConfirm: false,
       showCancelButton: true,
-      confirmButtonText: "Suivant",
+      confirmButtonText: "Next",
       preConfirm: () => {
         const email = document.getElementById("swal-email").value.trim();
         if (!email) {
