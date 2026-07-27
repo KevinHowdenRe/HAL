@@ -37,7 +37,12 @@ body{
   grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
   gap:12px;
 }
-
+hr{
+  border:none;
+  height:1px;
+  background:rgba(15,23,42,.08);
+  margin:24px 0;
+}
 h1,
 h2{
   margin:0 0 10px 0;
@@ -57,7 +62,13 @@ h2{
   color:#173F35;
 }
 
-h3,
+h3{
+  margin:24px 0 10px 0;
+  font-size:18px;
+  font-weight:700;
+  color:#173F35;
+}
+,
 h4,
 h5,
 h6{
@@ -142,4 +153,13 @@ a:hover{
 
 .card-content p:last-child{
     margin-bottom:0;
+}
+
+
+ul{
+  margin:10px 0 0 18px;
+}
+
+li{
+  margin:6px 0;
 }

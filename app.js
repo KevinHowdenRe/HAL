@@ -105,138 +105,113 @@ const WELCOME_HTML = {
 1: `
 <h1>Bienvenue</h1>
 
-<p>
-Cette plateforme donne accès aux contenus, analyses et outils internes HAL.
-Cette vue est réservée à un usage interne et ne doit pas être partagée à l'extérieur de l'entreprise.
+<p class="muted">
+Portail interne HAL.
 </p>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">🔐 Connexion</div>
-    <p>
-      Cliquez sur <strong>Login</strong> en haut à droite.
-    </p>
-    <p>
-      Utilisez soit un compte utilisateur, soit un code temporaire reçu par email.
-    </p>
-  </div>
-</div>
+<h3>Connexion</h3>
 
-<br>
+<p>
+Utilisez le bouton <strong>Login</strong> en haut à droite pour accéder aux contenus réservés.
+</p>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">👥 Vues disponibles</div>
-    <p>
-      Les menus affichés dépendent de vos droits d'accès.
-    </p>
-    <p>
-      Des vues supplémentaires peuvent être attribuées sur demande.
-    </p>
-  </div>
-</div>
+<p>
+Vous pouvez vous connecter à l'aide :
+</p>
 
-<br>
+<ul>
+  <li>d'un compte utilisateur</li>
+  <li>d'un code temporaire reçu par email</li>
+</ul>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">💬 Support</div>
-    <p>
-      Contactez l'équipe via Teams pour toute demande d'accès, démonstration ou assistance.
-    </p>
-  </div>
-</div>
+<h3>Accès</h3>
+
+<p>
+Les menus et outils disponibles dépendent des autorisations associées à votre compte.
+</p>
+
+<p>
+Des vues supplémentaires peuvent être attribuées sur demande.
+</p>
+
+<h3>Support</h3>
+
+<p>
+Pour toute demande d'accès, de démonstration ou d'assistance, contactez l'équipe via Teams.
+</p>
 `,
 
 2: `
 <h1>Welcome</h1>
 
-<p>
-This platform provides access to HAL internal content, analytics and tools.
-This view is intended for internal use only and must not be shared externally.
+<p class="muted">
+HAL internal portal.
 </p>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">🔐 Sign in</div>
-    <p>
-      Click the <strong>Login</strong> button in the upper-right corner.
-    </p>
-    <p>
-      You may use either a user account or a temporary access code received by email.
-    </p>
-  </div>
-</div>
+<h3>Sign in</h3>
 
-<br>
+<p>
+Use the <strong>Login</strong> button in the upper-right corner to access restricted content.
+</p>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">👥 Available views</div>
-    <p>
-      The visible sections depend on your access rights.
-    </p>
-    <p>
-      Additional views can be granted upon request.
-    </p>
-  </div>
-</div>
+<p>
+You may authenticate using:
+</p>
 
-<br>
+<ul>
+  <li>a user account</li>
+  <li>a temporary access code received by email</li>
+</ul>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">💬 Support</div>
-    <p>
-      Contact the team via Teams for access requests, demonstrations or assistance.
-    </p>
-  </div>
-</div>
+<h3>Access</h3>
+
+<p>
+Available menus and tools depend on the permissions assigned to your account.
+</p>
+
+<p>
+Additional views may be granted upon request.
+</p>
+
+<h3>Support</h3>
+
+<p>
+For access requests, demonstrations or assistance, please contact the team through Teams.
+</p>
 `,
 
 3: `
 <h1>Bienvenue</h1>
 
-<p>
-Cet espace donne accès aux analyses, rapports et outils mis à votre disposition.
+<p class="muted">
+Accédez à vos analyses, rapports et outils depuis un point d'entrée unique.
 </p>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">🔐 Se connecter</div>
-    <p>
-      Cliquez sur <strong>Login</strong> en haut à droite.
-    </p>
-    <p>
-      Vous pouvez utiliser un compte utilisateur ou un code temporaire reçu par email.
-    </p>
-  </div>
-</div>
+<h3>Connexion</h3>
 
-<br>
+<p>
+Cliquez sur le bouton <strong>Login</strong> situé en haut à droite.
+</p>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">📂 Accès personnalisés</div>
-    <p>
-      Les menus et contenus affichés dépendent des accès qui vous ont été attribués.
-    </p>
-    <p>
-      Certaines sections deviennent visibles uniquement après authentification.
-    </p>
-  </div>
-</div>
+<p>
+L'authentification est possible via un compte utilisateur ou un code temporaire reçu par email.
+</p>
 
-<br>
+<h3>Accès</h3>
 
-<div class="card notion">
-  <div class="card-content">
-    <div class="card-title">💬 Besoin d'aide ?</div>
-    <p>
-      Contactez l'équipe via Teams pour toute question ou demande d'accès complémentaire.
-    </p>
-  </div>
-</div>
+<p>
+Les sections affichées dépendent de votre profil et des autorisations qui vous ont été attribuées.
+</p>
+
+<p>
+Certaines fonctionnalités deviennent disponibles après connexion.
+</p>
+
+<h3>Support</h3>
+
+<p>
+Pour toute question ou demande d'accès complémentaire, contactez l'équipe via Teams.
+</p>
 `
 };
 
