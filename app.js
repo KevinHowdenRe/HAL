@@ -102,49 +102,107 @@ h2, h3, h4, h5, h6 {
 
 const WELCOME_HTML = {
   1: `<h1>Bienvenue</h1>
-	<p>
-	Cette plateforme est concue pour afficher différentes vues selon vos besoins. Ceci est la vue interne à ne pas partager en externe. 
-	</p>
-	<p>
-	Pour chacune des vues, les éléments partagés sont regroupés en 3 catégories : 
-	</p>
-	
-	<p>
-	La rubrique <strong>Articles</strong> regroupe des études réalisées en interne.   
-	</p>
-	<p>
-	La section <strong>Documentation</strong> fournit des tutoriels pour les outils à disposition en interne ainsi que certaines best practices. 
-    </p>	
-	<p>Dans <strong>Solutions</strong>, vous trouverez les outils développés pour les besoins internes et externes.  </p>
-	</p>
-	<p>Faire la demande par teams pour obtenir d'autres vues. Celles-ci seront alors sélectionnable dans l'onglet de gauche. Pour une démo en externe, utiliser le compte démo prévu à cet effet. </p>`,
+
+<p>
+Cette plateforme donne accès aux contenus, analyses et outils internes HAL.
+</p>
+
+<p>
+Pour accéder aux différentes sections, cliquez sur le bouton <strong>Login</strong> en haut à droite.
+</p>
+
+<p>
+Deux modes d’authentification sont disponibles :
+</p>
+
+<p>
+<strong>Code d’accès temporaire</strong><br>
+Recevez un code par email puis utilisez-le pour vous connecter rapidement.
+</p>
+
+<p>
+<strong>Compte utilisateur</strong><br>
+Connectez-vous avec votre adresse email et votre mot de passe.
+</p>
+
+<p>
+Les vues et contenus affichés dépendent de vos droits d’accès. Certaines sections ne deviennent visibles qu’après authentification.
+</p>
+
+<p>
+Pour obtenir un accès supplémentaire ou une nouvelle vue, contactez l’équipe via Teams.
+</p>
+
+<p>
+Cette vue est réservée à un usage interne et ne doit pas être partagée à l’extérieur de l’entreprise.
+</p>`,
+
   2: `<h1>Welcome</h1>
-<p>This platform is designed to display different views depending on your needs. This is the internal view and should not be shared externally.</p>
-<p>For each view, the shared elements are grouped into three categories:</p>
-<p>The Articles section contains studies carried out internally.</p>
-<p>The Documentation section provides tutorials for the internal tools available, as well as certain best practices.</p>
-<p>In Solutions, you will find the tools developed to meet both internal and external needs.</p>
 
-<p>Make the request via Teams to obtain additional views. These will then become selectable in the left‑hand tab.
-For an external demo, use the demo account provided for this purpose.</p>
+<p>
+This platform provides access to HAL internal content, analytics and tools.
+</p>
 
-`,
+<p>
+To access the available sections, click the <strong>Login</strong> button in the upper-right corner.
+</p>
+
+<p>
+Two authentication methods are available:
+</p>
+
+<p>
+<strong>Temporary access code</strong><br>
+Request a code by email and use it to sign in quickly.
+</p>
+
+<p>
+<strong>User account</strong><br>
+Sign in using your email address and password.
+</p>
+
+<p>
+The content and sections displayed depend on your access rights. Some sections become available only after authentication.
+</p>
+
+<p>
+To request additional access or obtain a new view, contact the team through Teams.
+</p>
+
+<p>
+This view is intended for internal use only and must not be shared externally.
+</p>`,
+
   3: `<h1>Bienvenue</h1>
-	<p>
-	Cet espace vous donne accès à vos analyses, rapports et outils personnalisés. 
-	</p>
-	<p>
-	Utilisez le menu à gauche pour naviguer entre les différentes sections.
-	</p>
-	<p>
-	La rubrique <strong>Articles</strong> regroupe les études réalisées ou partagées avec vous.  
-	</p>
-	<p>
-	La section <strong>Documentation</strong> explique en détail comment utiliser nos outils, ce que signifie notre approche "Client Side" notamment en terme de sécurité et confidentialité de la donnée. 
-    </p>	
-	<p>Dans <strong>Solutions</strong>, vous trouverez les outils développés pour vos besoins.  </p>
-	<p>Enfin, la page <strong>Contact</strong> vous permet d’échanger avec nous autour de vos projets.
-	</p>`
+
+<p>
+Cet espace donne accès aux analyses, rapports et outils mis à votre disposition.
+</p>
+
+<p>
+Pour commencer, cliquez sur le bouton <strong>Login</strong> en haut à droite.
+</p>
+
+<p>
+Vous pouvez vous connecter :
+</p>
+
+<p>
+<strong>Soit avec un code temporaire reçu par email</strong><br>
+<strong>Soit avec votre compte utilisateur</strong>
+</p>
+
+<p>
+Les menus et contenus proposés dépendent de votre profil et des accès qui vous ont été attribués.
+</p>
+
+<p>
+Si vous estimez qu’une section manque ou si vous avez besoin d’un accès complémentaire, contactez l’équipe via Teams.
+</p>
+
+<p>
+Utilisez le menu de gauche pour naviguer entre les différentes rubriques disponibles.
+</p>`
 };
 
 const CONTACT_HTML = {
@@ -545,7 +603,7 @@ async function logout() {
   f.srcdoc = "";
   f.src = "about:blank";
 
-  $("currentUrl").textContent = "-";
+  $("currentUrl").textContent = "Home";
   MENU_CACHE = {};
   CURRENT_SECTION = null;
   setStatus("🔒 Déconnecté");
