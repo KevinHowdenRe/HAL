@@ -406,14 +406,14 @@ async function loginSweet() {
         setStatus("✅ Logged in (code).");
         await Swal.fire({
           icon: "success",
-          title: "Connecté",
+          title: "Connected",
           timer: 900,
           showConfirmButton: false
         });
       } catch (e) {
         await Swal.fire({
           icon: "error",
-          title: "Code invalide",
+          title: "Invalid code",
           text: e.message
         });
         setStatus("Code access error: " + e.message, true);
