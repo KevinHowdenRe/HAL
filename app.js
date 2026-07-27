@@ -194,7 +194,7 @@ function wrapDoc(bodyHtml, title=""){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${escapeHtml(title)}</title>
-    <style>${COMMON_CSS}</style>
+    <link rel="stylesheet" href="iframe.css">
   </head><body>${bodyHtml}</body></html>`;
 }
 
@@ -406,14 +406,14 @@ async function loginSweet() {
         setStatus("✅ Logged in (code).");
         await Swal.fire({
           icon: "success",
-          title: "Connecté",
+          title: "Connected",
           timer: 900,
           showConfirmButton: false
         });
       } catch (e) {
         await Swal.fire({
           icon: "error",
-          title: "Code invalide",
+          title: "Invalid code",
           text: e.message
         });
         setStatus("Code access error: " + e.message, true);
