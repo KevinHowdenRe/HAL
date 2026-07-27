@@ -101,108 +101,143 @@ h2, h3, h4, h5, h6 {
 
 
 const WELCOME_HTML = {
-  1: `<h1>Bienvenue</h1>
+
+1: `
+<h1>Bienvenue</h1>
 
 <p>
 Cette plateforme donne accès aux contenus, analyses et outils internes HAL.
+Cette vue est réservée à un usage interne et ne doit pas être partagée à l'extérieur de l'entreprise.
 </p>
 
-<p>
-Pour accéder aux différentes sections, cliquez sur le bouton <strong>Login</strong> en haut à droite.
-</p>
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">🔐 Connexion</div>
+    <p>
+      Cliquez sur <strong>Login</strong> en haut à droite.
+    </p>
+    <p>
+      Utilisez soit un compte utilisateur, soit un code temporaire reçu par email.
+    </p>
+  </div>
+</div>
 
-<p>
-Deux modes d’authentification sont disponibles :
-</p>
+<br>
 
-<p>
-<strong>Code d’accès temporaire</strong><br>
-Recevez un code par email puis utilisez-le pour vous connecter rapidement.
-</p>
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">👥 Vues disponibles</div>
+    <p>
+      Les menus affichés dépendent de vos droits d'accès.
+    </p>
+    <p>
+      Des vues supplémentaires peuvent être attribuées sur demande.
+    </p>
+  </div>
+</div>
 
-<p>
-<strong>Compte utilisateur</strong><br>
-Connectez-vous avec votre adresse email et votre mot de passe.
-</p>
+<br>
 
-<p>
-Les vues et contenus affichés dépendent de vos droits d’accès. Certaines sections ne deviennent visibles qu’après authentification.
-</p>
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">💬 Support</div>
+    <p>
+      Contactez l'équipe via Teams pour toute demande d'accès, démonstration ou assistance.
+    </p>
+  </div>
+</div>
+`,
 
-<p>
-Pour obtenir un accès supplémentaire ou une nouvelle vue, contactez l’équipe via Teams.
-</p>
-
-<p>
-Cette vue est réservée à un usage interne et ne doit pas être partagée à l’extérieur de l’entreprise.
-</p>`,
-
-  2: `<h1>Welcome</h1>
+2: `
+<h1>Welcome</h1>
 
 <p>
 This platform provides access to HAL internal content, analytics and tools.
-</p>
-
-<p>
-To access the available sections, click the <strong>Login</strong> button in the upper-right corner.
-</p>
-
-<p>
-Two authentication methods are available:
-</p>
-
-<p>
-<strong>Temporary access code</strong><br>
-Request a code by email and use it to sign in quickly.
-</p>
-
-<p>
-<strong>User account</strong><br>
-Sign in using your email address and password.
-</p>
-
-<p>
-The content and sections displayed depend on your access rights. Some sections become available only after authentication.
-</p>
-
-<p>
-To request additional access or obtain a new view, contact the team through Teams.
-</p>
-
-<p>
 This view is intended for internal use only and must not be shared externally.
-</p>`,
+</p>
 
-  3: `<h1>Bienvenue</h1>
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">🔐 Sign in</div>
+    <p>
+      Click the <strong>Login</strong> button in the upper-right corner.
+    </p>
+    <p>
+      You may use either a user account or a temporary access code received by email.
+    </p>
+  </div>
+</div>
+
+<br>
+
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">👥 Available views</div>
+    <p>
+      The visible sections depend on your access rights.
+    </p>
+    <p>
+      Additional views can be granted upon request.
+    </p>
+  </div>
+</div>
+
+<br>
+
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">💬 Support</div>
+    <p>
+      Contact the team via Teams for access requests, demonstrations or assistance.
+    </p>
+  </div>
+</div>
+`,
+
+3: `
+<h1>Bienvenue</h1>
 
 <p>
 Cet espace donne accès aux analyses, rapports et outils mis à votre disposition.
 </p>
 
-<p>
-Pour commencer, cliquez sur le bouton <strong>Login</strong> en haut à droite.
-</p>
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">🔐 Se connecter</div>
+    <p>
+      Cliquez sur <strong>Login</strong> en haut à droite.
+    </p>
+    <p>
+      Vous pouvez utiliser un compte utilisateur ou un code temporaire reçu par email.
+    </p>
+  </div>
+</div>
 
-<p>
-Vous pouvez vous connecter :
-</p>
+<br>
 
-<p>
-<strong>Soit avec un code temporaire reçu par email</strong><br>
-<strong>Soit avec votre compte utilisateur</strong>
-</p>
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">📂 Accès personnalisés</div>
+    <p>
+      Les menus et contenus affichés dépendent des accès qui vous ont été attribués.
+    </p>
+    <p>
+      Certaines sections deviennent visibles uniquement après authentification.
+    </p>
+  </div>
+</div>
 
-<p>
-Les menus et contenus proposés dépendent de votre profil et des accès qui vous ont été attribués.
-</p>
+<br>
 
-<p>
-Si vous estimez qu’une section manque ou si vous avez besoin d’un accès complémentaire, contactez l’équipe via Teams.
-</p>
-
-<p>
-Utilisez le menu de gauche pour naviguer entre les différentes rubriques disponibles.
-</p>`
+<div class="card notion">
+  <div class="card-content">
+    <div class="card-title">💬 Besoin d'aide ?</div>
+    <p>
+      Contactez l'équipe via Teams pour toute question ou demande d'accès complémentaire.
+    </p>
+  </div>
+</div>
+`
 };
 
 const CONTACT_HTML = {

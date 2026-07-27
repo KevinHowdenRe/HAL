@@ -135,3 +135,11 @@ a:hover{
 .box{
   border-radius:0;
 }
+
+.card.notion{
+    margin-bottom:16px;
+}
+
+.card-content p:last-child{
+    margin-bottom:0;
+}
