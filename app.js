@@ -184,17 +184,21 @@ For access requests, demonstrations or assistance, please contact the team throu
 <h1>Bienvenue</h1>
 
 <p class="muted">
-Accédez à vos analyses, rapports et outils depuis un point d'entrée unique.
+Portail d'accès aux analyses, rapports et outils avec confidentialité des données.
 </p>
 
 <h3>Connexion</h3>
 
 <p>
-Cliquez sur le bouton <strong>Login</strong> situé en haut à droite.
+Pour se connecter, cliquez sur le bouton <strong>Login</strong> situé en haut à droite.
 </p>
 
 <p>
-L'authentification est possible via un compte utilisateur ou un code temporaire reçu par email.
+L'authentification se fait via un code temporaire envoyé par email.
+Utilisez votre adresse mail entreprise pour en faire la requête. 
+Si celle-ci est homologuée, vous recevrez un code dont l'activation est valable pendant une heure.
+Une fois le code activée la plateforme sera accessible pendant 7 jours sans reconnexion.
+Vérifiez dans les spams si vous n'avez toujours pas reçu le code.
 </p>
 
 <h3>Accès</h3>
@@ -210,7 +214,7 @@ Certaines fonctionnalités deviennent disponibles après connexion.
 <h3>Support</h3>
 
 <p>
-Pour toute question ou demande d'accès complémentaire, contactez l'équipe via Teams.
+N'hésitez pas à nous contacter pour toute question ou demande d'accès complémentaire.
 </p>
 `
 };
