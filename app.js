@@ -184,7 +184,7 @@ For access requests, demonstrations or assistance, please contact the team throu
 <h1>Bienvenue</h1>
 
 <p class="muted">
-Portail d'accès aux analyses, rapports et outils avec confidentialité des données.
+Portail d'accès aux solutions, articles et documentations.
 </p>
 
 <h3>Connexion</h3>
@@ -194,10 +194,14 @@ Pour se connecter, cliquez sur le bouton <strong>Login</strong> situé en haut �
 </p>
 
 <p>
-L'authentification se fait via un code temporaire envoyé par email.
-Utilisez votre adresse mail entreprise pour en faire la requête. 
-Si celle-ci est homologuée, vous recevrez un code dont l'activation est valable pendant une heure.
-Une fois le code activée la plateforme sera accessible pendant 7 jours sans reconnexion.
+L'authentification se fait soit avec un compte dédié, soit en utilisant un code temporaire envoyé par email.</p>
+<p>Pour l'option compte dédié : "Login" [en haut à droite] -> "Account" [formulaire Sign in] -> mot de passe communiqué</p>
+<p>
+Pour l'option code temporaire : sélectionnez "Access Code" au lieu de "Account".</p>
+<p>Utilisez votre adresse mail entreprise pour en faire la requête.</p>
+<p>Si celle-ci est homologuée, vous recevrez un code dont l'activation est valable pendant une heure.
+Une fois le code activée la plateforme sera accessible pendant 7 jours sans reconnexion.</p>
+<p>
 Vérifiez dans les spams si vous n'avez toujours pas reçu le code.
 </p>
 
