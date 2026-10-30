@@ -242,7 +242,7 @@ Pour toute question, demande d’information ou échange autour de vos projets, 
 
 
 <p>
-Email : <a href="mailto:demo@local">demo@local</a><br>
+Email : <a href="mailto:kevin.vu@howdenre.com">kevin.vu@howdenre.com</a><br>
 Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
 </p>
 
