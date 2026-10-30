@@ -243,7 +243,7 @@ Pour toute question, demande d’information ou échange autour de vos projets, 
 
 <p>
 Email : <a href="mailto:kevin.vu@howdenre.com">kevin.vu@howdenre.com</a><br>
-Téléphone : <a href="tel:+33606998874">06 06 99 88 74</a>
+Téléphone : <a href="tel:+33606998874">06 07 36 95 07</a>
 </p>
 
 <p>Nous sommes situés au 14 rue Lafayette, Paris :</p>
